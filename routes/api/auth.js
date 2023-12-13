@@ -1,4 +1,5 @@
 const express = require("express");
+require('./db')
 
 const UserController = require("../../controllers/auth");
 
@@ -8,13 +9,15 @@ const jsonParser = express.json();
 
 const router = express.Router();
 
-router.post("/register", jsonParser, UserController.register);
+router.post("/signup", jsonParser, UserController.register);
 
-router.post("/login", jsonParser, UserController.login);
+router.post("/signin", jsonParser, UserController.login);
 
 router.get("/current", authenticate, UserController.current);
 
-router.post("/logout", authenticate, UserController.logout);
+router.post("/forgot-password", jsonParser, UserController.forgotPsw);
+
+router.post("/signout", authenticate, UserController.logout);
 
 
 

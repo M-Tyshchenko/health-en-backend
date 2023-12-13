@@ -1,5 +1,7 @@
 const bcrypt = require("bcrypt");
 
+const crypto = require("node:crypto");
+
 const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
@@ -31,7 +33,7 @@ async function register(req, res, next) {
     });
 
     res.status(201).json({
-      user: { email: newUser.email },
+      user: { name: newUser.name, email: newUser.email },
     });
   } catch (err) {
     if (err.name === "MongoServerError" && err.code === 11000) {
@@ -85,6 +87,41 @@ async function login(req, res, next) {
   }
 }
 
+//--------------- FORGOT PASSWORD ---------------------//
+async function forgotPsw(req, res) {
+  const newPassword = crypto.randomUUID();
+
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email }).exec();
+
+    if (user === null) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const forgotPswEmail = ElasticEmail.EmailMessageData.constructFromObject({
+      Recipients: [new ElasticEmail.EmailRecipient(email)],
+      Content: {
+        Body: [
+          ElasticEmail.BodyPart.constructFromObject({
+            ContentType: "HTML",
+            Content: `If you forgot your password, use this one: ${newPassword}`,
+          }),
+        ],
+        Subject: "You forgot your password for login in Health app",
+        From: "example@gmail.com", //SHOULD CHANGE EMAIL IN FUTURE AND ADD TO ENV!!!!!!!!!
+      },
+    });
+
+    api.emailsPost(forgotPswEmail);
+
+    res.json({ message: "New password sent" });
+  } catch (error) {
+    next(error);
+  }
+}
+
 //--------------- CURRENT ---------------------//
 async function current(req, res) {
   const { email } = req.user;
@@ -106,5 +143,6 @@ module.exports = {
   register,
   login,
   current,
+  forgotPsw,
   logout,
 };
