@@ -31,7 +31,7 @@ async function register(req, res, next) {
     });
 
     res.status(201).json({
-      user: { email: newUser.email, subscription: newUser.subscription },
+      user: { email: newUser.email },
     });
   } catch (err) {
     if (err.name === "MongoServerError" && err.code === 11000) {
@@ -78,7 +78,7 @@ async function login(req, res, next) {
 
     res.json({
       token,
-      user: { email: user.email, subscription: user.subscription },
+      user: { email: user.email },
     });
   } catch (err) {
     next(err);
@@ -87,7 +87,7 @@ async function login(req, res, next) {
 
 //--------------- CURRENT ---------------------//
 async function current(req, res) {
-  const { email, subscription } = req.user;
+  const { email } = req.user;
   res.json({
     email,
     subscription,
