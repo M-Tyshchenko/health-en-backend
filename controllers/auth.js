@@ -6,13 +6,20 @@ const jwt = require("jsonwebtoken");
 
 require("dotenv").config();
 
+const ElasticEmail = require("@elasticemail/elasticemail-client");
+
 const User = require("../models/user");
 
 const { authSchema } = require("../routes/schemas/user");
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
-//--------------- REGISTRATION ---------------------//
+const defaultClient = ElasticEmail.ApiClient.instance;
+const { apikey } = defaultClient.authentications;
+apikey.apiKey = process.env.ELASTIC_API_KEY;
+const api = new ElasticEmail.EmailsApi();
+
+// --------------- REGISTRATION ---------------------//
 async function register(req, res, next) {
   const body = authSchema.validate(req.body);
   const userBody = body.value;
@@ -33,7 +40,7 @@ async function register(req, res, next) {
     });
 
     res.status(201).json({
-      user: { name: newUser.name, email: newUser.email },
+      user: newUser,
     });
   } catch (err) {
     if (err.name === "MongoServerError" && err.code === 11000) {
@@ -43,7 +50,7 @@ async function register(req, res, next) {
   }
 }
 
-//--------------- LOGIN ---------------------//
+// --------------- LOGIN ---------------------//
 async function login(req, res, next) {
   const body = authSchema.validate(req.body);
 
@@ -87,8 +94,8 @@ async function login(req, res, next) {
   }
 }
 
-//--------------- FORGOT PASSWORD ---------------------//
-async function forgotPsw(req, res) {
+// --------------- FORGOT PASSWORD ---------------------//
+async function forgotPsw(req, res, next) {
   const newPassword = crypto.randomUUID();
 
   const { email } = req.body;
@@ -110,7 +117,8 @@ async function forgotPsw(req, res) {
           }),
         ],
         Subject: "You forgot your password for login in Health app",
-        From: "example@gmail.com", //SHOULD CHANGE EMAIL IN FUTURE AND ADD TO ENV!!!!!!!!!
+        From: "example@gmail.com",
+        // SHOULD CHANGE EMAIL IN FUTURE AND ADD TO ENV!!!!!!!!!
       },
     });
 
@@ -122,16 +130,7 @@ async function forgotPsw(req, res) {
   }
 }
 
-//--------------- CURRENT ---------------------//
-async function current(req, res) {
-  const { email } = req.user;
-  res.json({
-    email,
-    subscription,
-  });
-}
-
-//--------------- LOGOUT ---------------------//
+// --------------- LOGOUT ---------------------//
 async function logout(req, res) {
   const { _id } = req.user;
   await User.findByIdAndUpdate(_id, { token: "" });
@@ -142,7 +141,6 @@ async function logout(req, res) {
 module.exports = {
   register,
   login,
-  current,
   forgotPsw,
   logout,
 };
