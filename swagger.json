@@ -1,0 +1,313 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "version": "2.0.0",
+    "title": "Swagger test",
+    "description": "Showing off swagger-ui-express"
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [{ "url": "http://localhost:3000" }],
+
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authorization endpoints"
+    }
+  ],
+
+  "paths": {
+    "/api/auth/signup": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User registration",
+        "parameters": [],
+
+        "requestBody": {
+          "description": "Registration's object",
+          "required": true,
+
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful operation",
+
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RegistrationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+            
+          },
+          "409": {
+            "description": "Provided email already exists",
+            "content": {}
+            
+          },
+          "500": {
+            "description": "Server error",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/auth/signin": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User login",
+        "parameters": [],
+
+        "requestBody": {
+          "description": "Login's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+              "401": {
+            "description": "Unauthorized (email or password is wrong)",
+            "content": {}
+          },
+          "500": {
+            "description": "Server error",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/auth/forgot-password": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User forgot password",
+        "parameters": [],
+        
+        "requestBody": {
+          "description": "Forgot-password's object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation (new password sent)",
+            "content": {
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "404": {
+            "description": "User not found",
+            "content": {}
+          },
+          "500": {
+            "description": "Server error",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/auth/signout": {
+      "post": {
+        "tags": ["Auth"],
+        "summary": "User logout",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "required": false,
+          "content": {
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "User signed out",
+            "content": {
+            }
+          }
+        }
+      }
+    }
+
+  },
+  "components": {
+    "schemas": {
+      "RegistrationRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "email",
+          "password",
+          "goal",
+          "gender",
+          "age",
+          "height",
+          "weight",
+          "activity"
+        ],
+
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "John Johnson"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          },
+          "goal": {
+            "type": "string",
+            "enum": ["Loose fat", "Maintain", "Gain muscle"]
+          },
+
+          "gender": {
+            "type": "string",
+            "enum": ["Male", "Female"]
+          },
+
+          "age": {
+            "type": "number",
+            "example": 35
+          },
+
+          "height": {
+            "type": "number",
+            "example": 170
+          },
+
+          "weight": {
+            "type": "number",
+            "example": 80
+          },
+
+          "activity": {
+            "type": "number",
+            "enum": [1.2, 1.375, 1.55, 1.725, 1.9]
+          }
+        }
+      },
+
+      "RegistrationResponse": {
+        "type": "object",
+        "properties": {
+          
+            "name": {
+              "type": "string",
+              "description": "User's name",
+              "example": "John Johnson"
+            },
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            
+          }
+        }
+      },
+
+      "LoginRequest": {
+        "type": "object",
+        "required": ["email", "password"],
+
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "User's password",
+            "example": "qwerty123"
+          }
+        }
+      },
+
+      "LoginResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token"
+          },
+          
+            "email": {
+              "type": "string",
+              "description": "User's email",
+              "format": "email"
+            }
+          
+        }
+      },
+
+            "ForgotRequest": {
+        "type": "object",
+        "required": ["email"],
+
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          }
+        }
+      }
+
+
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
