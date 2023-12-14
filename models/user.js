@@ -51,24 +51,7 @@ const userSchema = new mongoose.Schema(
       default: 1.2,
     },
 
-    dates: [
-      {
-        date: {
-          type: Date,
-          default: new Date(),
-        },
-        waterIntake: {
-          type: Number,
-          min: 0,
-          max: 5000,
-        },
-        foodIntake: {
-          carbohidrates: Number,
-          protein: Number,
-          fat: Number,
-        },
-      },
-    ],
+    
 
     token: {
       type: String,
