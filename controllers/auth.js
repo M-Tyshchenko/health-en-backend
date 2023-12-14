@@ -10,7 +10,11 @@ const ElasticEmail = require("@elasticemail/elasticemail-client");
 
 const User = require("../models/user");
 
-const { authSchema } = require("../routes/schemas/user");
+const {
+  authSchema,
+  loginSchema,
+  forgotSchema,
+} = require("../routes/schemas/user");
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -52,7 +56,7 @@ async function register(req, res, next) {
 
 // --------------- LOGIN ---------------------//
 async function login(req, res, next) {
-  const body = authSchema.validate(req.body);
+  const body = loginSchema.validate(req.body);
 
   if (typeof body.error !== "undefined") {
     return res.status(400).json({
@@ -79,7 +83,7 @@ async function login(req, res, next) {
   }
 
   const payload = { id: user._id };
-  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1d" });
+  const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1w" });
   await User.findByIdAndUpdate(user._id, { token });
 
   try {
@@ -97,6 +101,14 @@ async function login(req, res, next) {
 // --------------- FORGOT PASSWORD ---------------------//
 async function forgotPsw(req, res, next) {
   const newPassword = crypto.randomUUID();
+
+  const body = forgotSchema.validate(req.body);
+
+  if (typeof body.error !== "undefined") {
+    return res.status(400).json({
+      message: body.error.details.map((err) => err.message).join(", "),
+    });
+  }
 
   const { email } = req.body;
 
@@ -133,6 +145,7 @@ async function forgotPsw(req, res, next) {
 // --------------- LOGOUT ---------------------//
 async function logout(req, res) {
   const { _id } = req.user;
+
   await User.findByIdAndUpdate(_id, { token: "" });
 
   res.status(204).end();

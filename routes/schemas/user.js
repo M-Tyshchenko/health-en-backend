@@ -14,4 +14,17 @@ const authSchema = Joi.object({
   activity: Joi.number().valid(1.2, 1.375, 1.55, 1.725, 1.9).required(),
 });
 
-module.exports = { authSchema };
+const loginSchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required(),
+  password: Joi.string().required(),
+});
+
+const forgotSchema = Joi.object({
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required(),
+});
+
+module.exports = { authSchema, loginSchema, forgotSchema };
