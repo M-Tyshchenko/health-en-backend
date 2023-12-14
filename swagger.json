@@ -198,7 +198,7 @@
           },
           "goal": {
             "type": "string",
-            "enum": ["Loose fat", "Maintain", "Gain muscle"]
+            "enum": ["Lose fat", "Maintain", "Gain muscle"]
           },
 
           "gender": {
