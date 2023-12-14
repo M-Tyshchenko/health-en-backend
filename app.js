@@ -4,6 +4,7 @@ const logger = require("morgan");
 const cors = require("cors");
 
 const authRouter = require("./routes/api/auth");
+const statsRouter = require("./routes/api/user")
 const foodRouter = require("./routes/api/recommendedFood");
 
 const app = express();
@@ -15,7 +16,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/api/auth", authRouter);
-
+app.use("/api/user", statsRouter);
 app.use("/api/recommended-food", foodRouter);
 
 app.use((req, res) => {
