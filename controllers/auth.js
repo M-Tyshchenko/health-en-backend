@@ -16,6 +16,8 @@ const {
   forgotSchema,
 } = require("../routes/schemas/user");
 
+const { bmr, water, nutrients } = require("../helpers/calculations");
+
 const SECRET_KEY = process.env.SECRET_KEY;
 
 const defaultClient = ElasticEmail.ApiClient.instance;
@@ -34,7 +36,7 @@ async function register(req, res, next) {
     });
   }
 
-  const { password } = req.body;
+  const { password, goal, gender, age, height, weight, activity } = req.body;
   const hashPassword = await bcrypt.hash(password, 10);
 
   try {
