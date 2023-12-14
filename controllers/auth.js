@@ -14,9 +14,9 @@ const {
   authSchema,
   loginSchema,
   forgotSchema,
-} = require("../routes/schemas/user");
+} = require("../routes/schemas/auth");
 
-const { bmr, water, nutrients } = require("../helpers/calculations");
+const { calories, drink, elements } = require("../helpers/calculations");
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -39,10 +39,21 @@ async function register(req, res, next) {
   const { password, goal, gender, age, height, weight, activity } = req.body;
   const hashPassword = await bcrypt.hash(password, 10);
 
+  const bmr = calories(gender, age, height, weight, activity);
+  const water = drink(weight, activity);
+  const nutrients = elements(goal, bmr);
+
   try {
     const newUser = await User.create({
       ...userBody,
       password: hashPassword,
+      bmr,
+      water,
+      nutrients: {
+        protein: nutrients.protein,
+        fat: nutrients.fat,
+        carbonohidrates: nutrients.carbonohidrates
+      },
     });
 
     res.status(201).json({

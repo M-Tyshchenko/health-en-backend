@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema(
 
     goal: {
       type: String,
-      enum: ["Loose fat", "Maintain", "Gain muscle"],
+      enum: ["Lose fat", "Maintain", "Gain muscle"],
       default: "Loose fat",
     },
 
@@ -51,7 +51,19 @@ const userSchema = new mongoose.Schema(
       default: 1.2,
     },
 
-    
+    bmr: {
+      type: Number,
+    },
+
+    water: {
+      type: Number,
+    },
+
+    nutrients: {
+      protein: Number,
+      fat: Number,
+      carbonohidrates: Number,
+    },
 
     token: {
       type: String,

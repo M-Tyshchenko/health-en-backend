@@ -1,11 +1,11 @@
-const { isValidObjectId } = require("mongoose");
+// const { isValidObjectId } = require("mongoose");
 
-const isValidId = (req, res, next) => {
-  const { contactId } = req.params;
-  if (!isValidObjectId(contactId)) {
-    return res.status(404).json({ message: "Not found" });
-  }
-  next();
-};
+// const isValidId = (req, res, next) => {
+//   const { contactId } = req.params;
+//   if (!isValidObjectId(contactId)) {
+//     return res.status(404).json({ message: "Not found" });
+//   }
+//   next();
+// };
 
-module.exports = isValidId;
+// module.exports = isValidId;
