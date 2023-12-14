@@ -51,6 +51,20 @@ const userSchema = new mongoose.Schema(
       default: 1.2,
     },
 
+    bmr: {
+      type: Number,
+    },
+
+    water: {
+      type: Number,
+    },
+
+    nutrients: {
+      protein: Number,
+      fat: Number,
+      carbonohidrates: Number,
+    },
+
     token: {
       type: String,
       default: "",
