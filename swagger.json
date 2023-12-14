@@ -50,12 +50,10 @@
           "400": {
             "description": "Bad request (invalid request body)",
             "content": {}
-            
           },
           "409": {
             "description": "Provided email already exists",
             "content": {}
-            
           },
           "500": {
             "description": "Server error",
@@ -97,7 +95,7 @@
             "description": "Bad request (invalid request body)",
             "content": {}
           },
-              "401": {
+          "401": {
             "description": "Unauthorized (email or password is wrong)",
             "content": {}
           },
@@ -114,7 +112,7 @@
         "tags": ["Auth"],
         "summary": "User forgot password",
         "parameters": [],
-        
+
         "requestBody": {
           "description": "Forgot-password's object",
           "required": true,
@@ -129,8 +127,7 @@
         "responses": {
           "200": {
             "description": "Successful operation (new password sent)",
-            "content": {
-            }
+            "content": {}
           },
           "400": {
             "description": "Bad request (invalid request body)",
@@ -156,19 +153,16 @@
         "security": [{ "Bearer": [] }],
         "requestBody": {
           "required": false,
-          "content": {
-          }
+          "content": {}
         },
         "responses": {
           "204": {
             "description": "User signed out",
-            "content": {
-            }
+            "content": {}
           }
         }
       }
     }
-
   },
   "components": {
     "schemas": {
@@ -237,17 +231,15 @@
       "RegistrationResponse": {
         "type": "object",
         "properties": {
-          
-            "name": {
-              "type": "string",
-              "description": "User's name",
-              "example": "John Johnson"
-            },
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            
+          "name": {
+            "type": "string",
+            "description": "User's name",
+            "example": "John Johnson"
+          },
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
           }
         }
       },
@@ -277,17 +269,16 @@
             "type": "string",
             "description": "User's token"
           },
-          
-            "email": {
-              "type": "string",
-              "description": "User's email",
-              "format": "email"
-            }
-          
+
+          "email": {
+            "type": "string",
+            "description": "User's email",
+            "format": "email"
+          }
         }
       },
 
-            "ForgotRequest": {
+      "ForgotRequest": {
         "type": "object",
         "required": ["email"],
 
@@ -299,8 +290,6 @@
           }
         }
       }
-
-
     },
     "securitySchemes": {
       "Bearer": {
