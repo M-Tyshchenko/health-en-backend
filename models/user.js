@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema(
     goal: {
       type: String,
       enum: ["Lose fat", "Maintain", "Gain muscle"],
-      default: "Loose fat",
+      default: "Lose fat",
     },
 
     gender: {
