@@ -44,7 +44,7 @@ async function register(req, res, next) {
     });
 
     res.status(201).json({
-      user: newUser,
+      user: { name: newUser.name, email: newUser.email },
     });
   } catch (err) {
     if (err.name === "MongoServerError" && err.code === 11000) {
