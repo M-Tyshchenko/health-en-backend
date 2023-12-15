@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const StatsController = require('../../controllers/stats')
 const DetailsController = require('../../controllers/userDetails');
+const {authenticate} = require('../../middlewares')
 
 router.get('/current', DetailsController.getCurrentUser);
 
@@ -17,9 +18,9 @@ router.put('/food-intake/:id', DetailsController.updateFoodIntake);
 
 router.delete('/food-intake', DetailsController.deleteFoodIntake);
 
-router.post('/water-intake', StatsController.addWaterIntakeStats)
+router.post('/water-intake', authenticate, StatsController.addWaterIntakeStats)
 
-router.delete('/water-intake', StatsController.resetWaterIntakeState)
+router.delete('/water-intake', StatsController.resetWaterIntakeStats)
 
 router.get('/statistics', StatsController.getTotalConsumptionStats);
 

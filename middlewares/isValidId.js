@@ -1,8 +1,8 @@
 const { isValidObjectId } = require("mongoose");
 
 const isValidId = (req, res, next) => {
-  const { contactId } = req.params;
-  if (!isValidObjectId(contactId)) {
+  const { id } = req.params;
+  if (!isValidObjectId(id)) {
     return res.status(404).json({ message: "Not found" });
   }
   next();
