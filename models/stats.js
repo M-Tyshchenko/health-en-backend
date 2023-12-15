@@ -9,24 +9,29 @@ const dailySchema = new Schema(
     waterIntake: {
       type: Number,
       default: 0,
+      required: true,
     },
     foodIntake: {
       carbohidrates: {
         type: Number,
         default: 0,
+        required: true,
       },
       protein: {
         type: Number,
         default: 0,
+        required: true,
       },
       fat: {
         type: Number,
         default: 0,
+        required: true,
       },
     },
     calories: {
       type: Number,
-      default: 0
+      default: 0,
+      required: true,
     },
   }, {timestamps: false, versionKey: false}
 )
@@ -39,8 +44,9 @@ const statsSchema = new Schema({
         type: String,
         required: true,
         default: dateString,
-        stats: dailySchema
+        
       },
+      stats: dailySchema,
       
     }, 
   ],
