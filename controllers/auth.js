@@ -8,6 +8,8 @@ require("dotenv").config();
 
 const ElasticEmail = require("@elasticemail/elasticemail-client");
 
+const gravatar = require("gravatar");
+
 const User = require("../models/user");
 
 const {
@@ -37,8 +39,11 @@ async function register(req, res, next) {
     });
   }
 
-  const { password, goal, gender, age, height, weight, activity } = req.body;
+  const { email, password, goal, gender, age, height, weight, activity } =
+    req.body;
   const hashPassword = await bcrypt.hash(password, 10);
+
+  const avatarURL = gravatar.url(email);
 
   const bmr = calories(gender, age, height, weight, activity);
   const water = drink(weight, activity);
@@ -48,6 +53,7 @@ async function register(req, res, next) {
     const newUser = await User.create({
       ...userBody,
       password: hashPassword,
+      avatarURL,
       bmr,
       water,
       nutrients: {
