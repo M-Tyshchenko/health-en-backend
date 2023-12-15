@@ -20,6 +20,7 @@ const { calories, drink, elements } = require("../helpers/calculations");
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
+const FROM_EMAIL = process.env.FROM_EMAIL;
 const defaultClient = ElasticEmail.ApiClient.instance;
 const { apikey } = defaultClient.authentications;
 apikey.apiKey = process.env.ELASTIC_API_KEY;
@@ -114,6 +115,7 @@ async function login(req, res, next) {
 // --------------- FORGOT PASSWORD ---------------------//
 async function forgotPsw(req, res, next) {
   const newPassword = crypto.randomUUID();
+  const hashPassword = await bcrypt.hash(newPassword, 10);
 
   const body = forgotSchema.validate(req.body);
 
@@ -132,6 +134,12 @@ async function forgotPsw(req, res, next) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    if (user.token !== "") {
+      return res.status(400).json({ message: "User has already been passed" });
+    }
+
+    await User.findByIdAndUpdate(user._id, { password: hashPassword });
+
     const forgotPswEmail = ElasticEmail.EmailMessageData.constructFromObject({
       Recipients: [new ElasticEmail.EmailRecipient(email)],
       Content: {
@@ -142,8 +150,7 @@ async function forgotPsw(req, res, next) {
           }),
         ],
         Subject: "You forgot your password for login in Health app",
-        From: "example@gmail.com",
-        // SHOULD CHANGE EMAIL IN FUTURE AND ADD TO ENV!!!!!!!!!
+        From: FROM_EMAIL,
       },
     });
 
