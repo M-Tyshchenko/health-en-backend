@@ -67,9 +67,3 @@ module.exports = {
   Stats,
 };
 
-// date: {
-//         type: String,
-//         required: true,
-//         default: dateString,
-
-//       }
