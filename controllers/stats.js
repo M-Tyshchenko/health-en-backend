@@ -1,65 +1,91 @@
-const { ctrlWrapper } = require("../helpers");
+const {
+  ctrlWrapper,
+  HTTPError,
+  generateDailyConsumptionEntry,
+  createNewStatsEntry,
+  createFormattedDateString,
+  parseAndTransformDate,
+} = require("../helpers");
 const { Stats } = require("../models");
-const { HTTPError } = require("../helpers");
-
-const generateDailyConsumptionEntry = (params) => {
-  const {
-    waterIntake = 0,
-    foodIntake: { carbohidrates = 0, protein = 0, fat = 0 } = {},
-    calories = 0,
-    date,
-  } = params;
-
-  return {
-    date,
-    stats: {
-      waterIntake,
-      foodIntake: {
-        carbohidrates,
-        protein,
-        fat,
-      },
-      calories,
-    },
-  };
-};
-
-const createNewStatsEntry = (dailyEntry, owner) => {
-  return {
-    dates: [dailyEntry],
-    owner,
-  };
-};
-
-const createDateString = () => {
-  const x = new Date();
-  const date = x.toDateString();
-  return date;
-};
 
 const addWaterIntakeStats = async (req, res, next) => {
-  const { _id: owner } = req.user;
+  const { _id: owner, weight } = req.user;
+
   const { waterIntake } = req.body;
 
-  const date = createDateString();
-  const isExist = await Stats.findOne({ owner, "dates.date": date });
-  if (!isExist) {
-    const dailyEntry = generateDailyConsumptionEntry({ waterIntake, date });
+  const date = createFormattedDateString();
+
+  const isOwnerPresent = await Stats.findOne({ owner });
+  if (!isOwnerPresent) {
+    const dailyEntry = generateDailyConsumptionEntry({
+      weight,
+      waterIntake,
+      date,
+    });
     const newEntry = createNewStatsEntry(dailyEntry, owner);
     const result = await Stats.create(newEntry);
     res.status(200).json({ result });
   }
 
- const  result = await Stats.findOneAndUpdate(
+  const isDailyCreated = await Stats.findOne({ owner, "dates.date": date });
+  if (!isDailyCreated) {
+    const dailyEntry = generateDailyConsumptionEntry({ waterIntake, date });
+    const result = await Stats.findOneAndUpdate(
+      { owner, "dates.date": date },
+      { $push: { dailyEntry } }
+    );
+    res.status(200).json({ result });
+  }
+
+  const result = await Stats.findOneAndUpdate(
     { owner, "dates.date": date },
     { $inc: { "dates.$.stats.waterIntake": waterIntake } },
-    { new: true }
+    { new: true, runValidators: true }
   );
   res.status(200).json(result);
 };
-const resetWaterIntakeStats = async (req, res, next) => {};
+const resetWaterIntakeStats = async (req, res, next) => {
+  const { _id: owner } = req.user;
+  const date = createFormattedDateString();
+  const result = await Stats.findOneAndUpdate(
+    { owner, "dates.date": date },
+    { $set: { "dates.$.stats.waterIntake": 0 } },
+    { new: true }
+  );
+  if (!result) {
+    throw HTTPError(
+      404,
+      "Not found. User has no such records that may be reset on that date"
+    );
+  }
+  res.status(200).json({ result });
+};
 
-const getTotalConsumptionStats = async (req, res, next) => {};
+const getTotalConsumptionStats = async (req, res, next) => {
+  const { _id: owner } = req.user;
+  const { dateFrom, dateTo } = req.body;
+  const validFromDate = parseAndTransformDate(
+    dateFrom,
+    createFormattedDateString
+  );
+  const validToDate = parseAndTransformDate(dateTo, createFormattedDateString);
+
+  if (!validFromDate && validToDate) {
+    throw HTTPError(400, "Invalid date format");
+  }
+  const result = await Stats.find({
+    owner,
+    "dates.date": {
+      $gte: validFromDate,
+      $lte: validToDate,
+    },
+  });
+  if (!result) {
+    throw HTTPError(404, "No records found within the given period");
+  }
+
+  res.status(200).json(result);
+};
 
 module.exports = {
   addWaterIntakeStats: ctrlWrapper(addWaterIntakeStats),
@@ -70,4 +96,3 @@ module.exports = {
 // const requestBody = {
 // "waterIntake": 500
 // }
-

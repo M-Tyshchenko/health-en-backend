@@ -162,6 +162,49 @@
           }
         }
       }
+    },
+    "/api/user/addWaterIntake": {
+      "post": {
+        "tags": ["Stats"],
+        "summary": "Add water consumption info",
+        "parameters": [],
+
+        "requestBody": {
+          "description": "addWaterIntake object",
+          "required": true,
+          "content": {
+            "application/json":{
+              "schema": {
+                "$ref": "#/components/schemas/addWaterIntakeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/addWaterIntakeResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized (email or password is wrong)",
+            "content": {}
+          },
+          "500": {
+            "description": "Server error",
+            "content": {}
+          }
+        }
+      }
     }
   },
   "components": {

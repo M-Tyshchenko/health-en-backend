@@ -1,8 +1,5 @@
 const { Schema, model } = require("mongoose");
-const {handleMongooseError} = require('../helpers')
-
-const date = new Date;
-const dateString = date.toDateString();
+const { handleMongooseError } = require("../helpers");
 
 const dailySchema = new Schema(
   {
@@ -10,6 +7,8 @@ const dailySchema = new Schema(
       type: Number,
       default: 0,
       required: true,
+      min: 0,
+      max: 7000,
     },
     foodIntake: {
       carbohidrates: {
@@ -33,32 +32,44 @@ const dailySchema = new Schema(
       default: 0,
       required: true,
     },
-  }, {timestamps: false, versionKey: false}
-)
-
-
-const statsSchema = new Schema({
-  dates: [
-    {
-      date: {
-        type: String,
-        required: true,
-        default: dateString,
-        
-      },
-      stats: dailySchema,
-      
-    }, 
-  ],
-  owner: {
-    type: Schema.Types.ObjectId,
-    ref: "user",
-    required: true,
+    weight: {
+      type: Number,
+      default: 0,
+      required: true,
+    }
   },
-}, {versionKey: false});
-statsSchema.post('save', handleMongooseError);
-const Stats = model('stat', statsSchema);
+  { timestamps: false, versionKey: false }
+);
+
+const statsSchema = new Schema(
+  {
+    dates: [
+      {
+        date: {
+          type: String,
+          required: true,
+        },
+        stats: dailySchema,
+      },
+    ],
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+      required: true,
+    },
+  },
+  { versionKey: false }
+);
+statsSchema.post("save", handleMongooseError);
+const Stats = model("stat", statsSchema);
 
 module.exports = {
-    Stats,
-}
+  Stats,
+};
+
+// date: {
+//         type: String,
+//         required: true,
+//         default: dateString,
+
+//       }
