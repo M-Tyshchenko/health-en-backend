@@ -8,6 +8,9 @@ const createFormattedDateString = (ISODate) => {
 }
 const parseAndTransformDate = (date, parser) => {
   const parsedDate = Date.parse(date);
+  if (isNaN(parsedDate)) {
+    return null;
+  }
   const newDate = new Date(parsedDate)
   return parser(newDate);
 

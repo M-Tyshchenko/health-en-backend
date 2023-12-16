@@ -70,7 +70,8 @@ const getTotalConsumptionStats = async (req, res, next) => {
   );
   const validToDate = parseAndTransformDate(dateTo, createFormattedDateString);
 
-  if (!validFromDate && validToDate) {
+
+  if (!validFromDate || !validToDate) {
     throw HTTPError(400, "Invalid date format");
   }
   const result = await Stats.find({
@@ -93,6 +94,3 @@ module.exports = {
   getTotalConsumptionStats: ctrlWrapper(getTotalConsumptionStats),
 };
 
-// const requestBody = {
-// "waterIntake": 500
-// }
