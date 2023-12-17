@@ -12,6 +12,7 @@ const authSchema = Joi.object({
   height: Joi.number().required(),
   weight: Joi.number().required(),
   activity: Joi.number().valid(1.2, 1.375, 1.55, 1.725, 1.9).required(),
+  avatarURL: Joi.string(),
 });
 
 const loginSchema = Joi.object({
