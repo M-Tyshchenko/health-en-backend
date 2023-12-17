@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const { calories, drink, elements } = require("../helpers/calculations");
-const { authSchema } = require("../routes/schemas/auth");
+const { updateSchema } = require("../routes/schemas/user");
 const bcrypt = require("bcrypt");
 const {  
     generateDailyConsumptionEntry,
@@ -49,7 +49,7 @@ async function getCurrentUser (req, res, next) {
 
 async function updateUser (req, res, next) {
     const id = req.user._id;
-    const body = authSchema.validate(req.body);
+    const body = updateSchema.validate(req.body);
 
     if (typeof body.error !== "undefined") {
         return res.status(400).json({
@@ -106,14 +106,10 @@ async function updateGoal (req, res, next) {
         return res.status(400).json({ "message": "goal not changed" });
     }
 
-    const bmr = calories(user.gender, user.age, user.height, user.weight, user.activity);
-    const water = drink(user.weight, user.activity);
-    const nutrients = elements(goal, bmr);
+    const nutrients = elements(goal, user.bmr);
 
     const newUser = {
         goal,
-        bmr,
-        water,
         nutrients: {
             protein: nutrients.protein,
             fat: nutrients.fat,
@@ -123,9 +119,7 @@ async function updateGoal (req, res, next) {
 
     try {
         const updatedUser = await User.findByIdAndUpdate(id, newUser, { new: true });
-        res.status(200).json({
-            user: { goal: updatedUser.goal },
-            });
+        res.status(200).json({ user: { goal: updatedUser.goal } });
     } catch(err) {
         next(err);
     }
