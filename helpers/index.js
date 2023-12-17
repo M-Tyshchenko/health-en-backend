@@ -4,7 +4,7 @@ const { HTTPError } = require("../helpers/HTTPError");
 const { calories, drink, elements } = require("../helpers/calculations");
 const {
   generateDailyConsumptionEntry,
-  createNewStatsEntry,
+  createNewStatsEntry, generateMealEntry, createFoodIntakeQuery, 
 } = require("../helpers/statsEntryCreator");
 const {
   createFormattedDateString,
@@ -20,5 +20,6 @@ module.exports = {
   generateDailyConsumptionEntry,
   createNewStatsEntry,
   createFormattedDateString,
-  parseAndTransformDate,
+  parseAndTransformDate, generateMealEntry, createFoodIntakeQuery, 
+  
 };

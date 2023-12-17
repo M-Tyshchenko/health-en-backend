@@ -13,9 +13,9 @@ router.put('/goal', DetailsController.updateGoal);
 
 router.post('/weight', DetailsController.updateWeight);
 
-router.post('/food-intake', DetailsController.saveFoodIntake);
+router.post('/food-intake', authenticate, validateBody(schemas.addFoodIntakeSchema), StatsController.addFoodIntakeStats);
 
-router.put('/food-intake/:id', DetailsController.updateFoodIntake);
+router.put('/food-intake/:id', authenticate, StatsController.updateFoodIntakeInfo);
 
 router.delete('/food-intake', DetailsController.deleteFoodIntake);
 
@@ -23,6 +23,6 @@ router.post('/water-intake', authenticate, validateBody(schemas.addWaterIntakeSc
 
 router.delete('/water-intake', authenticate, StatsController.resetWaterIntakeStats)
 
-router.get('/statistics', authenticate, StatsController.getTotalConsumptionStats);
+router.get('/statistics', authenticate, validateBody(schemas.getStatsSchema), StatsController.getTotalConsumptionStats);
 
 module.exports = router;
