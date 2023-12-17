@@ -52,7 +52,6 @@ async function getCurrentUser (req, res, next) {
 async function updateUser (req, res, next) {
     const id = req.user._id;
     const body = authSchema.validate(req.body);
-    const userBody = body.value;
 
     if (typeof body.error !== "undefined") {
         return res.status(400).json({
@@ -91,7 +90,7 @@ async function updateUser (req, res, next) {
         const updatedUser = await User.findByIdAndUpdate(id, newUser, { new: true });
 
         res.status(200).json({
-        user: { name: newUser.name, email: newUser.email },
+        user: { name: updatedUser.name, email: updatedUser.email },
         });
     
       } catch (err) {
@@ -136,7 +135,6 @@ async function updateGoal (req, res, next) {
 };
 
 async function updateWeight (req, res, next) {
-    const date = createFormattedDateString();
     const { weight } = req.body;
     const id = req.user._id;
 
