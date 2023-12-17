@@ -33,8 +33,6 @@ const addWeightStats = async (req, weight) => {
         { dates: dailyEntry },
         { new: true }
       );
-
-    return;
   };
 
 async function getCurrentUser (req, res, next) {
