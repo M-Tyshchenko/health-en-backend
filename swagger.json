@@ -163,7 +163,7 @@
         }
       }
     },
-    "/api/user/addWaterIntake": {
+    "/api/user/water-intake": {
       "post": {
         "tags": ["Stats"],
         "summary": "Add water consumption info",
@@ -173,9 +173,9 @@
           "description": "addWaterIntake object",
           "required": true,
           "content": {
-            "application/json":{
+            "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/addWaterIntakeRequest"
+                "$ref": "#/components/schemas/AddWaterIntakeRequest"
               }
             }
           }
@@ -186,14 +186,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/addWaterIntakeResponse"
+                  "$ref": "#/components/schemas/AddWaterIntakeResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request (invalid request body)",
-            "content": {}
+            "content": { "message": "\"waterIntake\" must be a number" }
           },
           "401": {
             "description": "Unauthorized (email or password is wrong)",
@@ -205,8 +205,38 @@
           }
         }
       }
+    },
+    "delete": {
+      "tags": ["Stats"],
+      "summary": "Reset water consumption value to 0 for current day",
+      "parameters": []
+    },
+    "responses": {
+      "200": {
+        "description": "Successful operation",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ResetWaterIntakeResponse"
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized (email or password is wrong)",
+        "content": {}
+      },
+      "404": {
+        "description": "Not found. User has no such records that may be reset on that date",
+        "content": {}
+      },
+      "500": {
+        "description": "Server error",
+        "content": {}
+      }
     }
   },
+
   "components": {
     "schemas": {
       "RegistrationRequest": {
@@ -330,6 +360,88 @@
             "type": "string",
             "description": "User's email",
             "format": "email"
+          }
+        }
+      },
+      "AddWaterIntakeRequest": {
+        "type": "object",
+        "required": ["waterIntake"],
+        "properties": {
+          "waterIntake": {
+            "type": "number",
+            "description": "waterIntake value in mL",
+            "example": 1000
+          }
+        }
+      }
+    },
+    "AddWaterIntakeResponse": {
+      "type": "object",
+      "properties": {
+        "waterIntake": {
+          "type": "number",
+          "description": "waterIntake value in mL after update",
+          "example": 2000
+        }
+      }
+    },
+    "ResetWaterIntakeResponse": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string",
+          "description": "success message",
+          "example": "waterIntake has been successfuly reset"
+        },
+        "waterIntake": {
+          "type": "number",
+          "description": "waterIntake value in mL after reset",
+          "example": 0
+        }
+      }
+    },
+    "getStatisticsResponse": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "stats": {
+            "type": "object",
+            "properties": {
+              "foodIntake": {
+                "type": "object",
+                "properties": {
+                  "carbohidrates": {
+                    "type": "number"
+                  },
+                  "protein": {
+                    "type": "number"
+                  },
+                  "fat": {
+                    "type": "number"
+                  }
+                }
+              },
+              "waterIntake": {
+                "type": "number"
+              },
+              "calories": {
+                "type": "number"
+              },
+              "weight": {
+                "type": "number"
+              },
+              "_id": {
+                "type": "string"
+              }
+            }
           }
         }
       }
