@@ -204,14 +204,12 @@
             "content": {}
           }
         }
-      }
-    },
-    "delete": {
+      },
+      "delete": {
       "tags": ["Stats"],
       "summary": "Reset water consumption value to 0 for current day",
-      "parameters": []
-    },
-    "responses": {
+      "parameters": [],
+      "responses": {
       "200": {
         "description": "Successful operation",
         "content": {
@@ -235,6 +233,52 @@
         "content": {}
       }
     }
+    }
+    },
+    "/api/user/statistics": {
+      "get": {
+        "tags": ["Statistics"],
+        "summary": "Get user's stats within requested period, including calories and water consumtion, weight",
+        "parameters": [],
+        "requestBody": {
+          "description": "getStats object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/getStatisticsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getStatisticsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (invalid request body)",
+            "content": { "message": "Invalid date format" }
+          },
+          "401": {
+            "description": "Unauthorized (email or password is wrong)",
+            "content": {}
+          },
+          "500": {
+            "description": "Server error",
+            "content": {}
+          }
+        }
+      }
+    }
+    
+    
   },
 
   "components": {
@@ -373,9 +417,8 @@
             "example": 1000
           }
         }
-      }
-    },
-    "AddWaterIntakeResponse": {
+      },
+      "AddWaterIntakeResponse": {
       "type": "object",
       "properties": {
         "waterIntake": {
@@ -397,6 +440,22 @@
           "type": "number",
           "description": "waterIntake value in mL after reset",
           "example": 0
+        }
+      }
+    },
+    "getStatisticsRequest": {
+      "type": "object",
+      "required": true,
+      "properties": {
+        "dateFrom": {
+          "type": "string",
+          "description": "date string in arbitrary format (toISOString is preferable)",
+          "example": "2023-12-15"
+        },
+        "dateTo": {
+          "type": "string",
+          "description": "date string in arbitrary format (toISOString is preferable)",
+          "example": "2023-12-17T12:23:43.916Z"
         }
       }
     },
@@ -454,4 +513,5 @@
       }
     }
   }
+}
 }
