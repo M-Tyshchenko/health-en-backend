@@ -2,8 +2,40 @@ const User = require("../models/user");
 const { calories, drink, elements } = require("../helpers/calculations");
 const { authSchema } = require("../routes/schemas/auth");
 const bcrypt = require("bcrypt");
-const { createFormattedDateString } = require("../helpers");
+const {  
+    generateDailyConsumptionEntry,
+    createNewStatsEntry,
+    createFormattedDateString, 
+} = require("../helpers");
+const { Stats } = require("../models");
 
+const addWeightStats = async (req, weight) => {
+    const { _id: owner } = req.user;
+  
+    const date = createFormattedDateString();
+  
+    const isOwnerPresent = await Stats.findOne({ owner });
+  
+    if (!isOwnerPresent) {
+      const dailyEntry = generateDailyConsumptionEntry({
+        weight,
+        date,
+      });
+      const newEntry = createNewStatsEntry(dailyEntry, owner);
+      await Stats.create(newEntry);
+  
+      return;
+    }
+
+      const dailyEntry = generateDailyConsumptionEntry({ weight, date });
+      await Stats.findOneAndUpdate(
+        { owner },
+        { dates: dailyEntry },
+        { new: true }
+      );
+
+    return;
+  };
 
 async function getCurrentUser (req, res, next) {
 
@@ -131,6 +163,7 @@ async function updateWeight (req, res, next) {
 
     try {
         const updatedUser = await User.findByIdAndUpdate(id, newUser, { new: true });
+        addWeightStats(req, weight)
         res.status(200).json({
             user: { weight: updatedUser.weight },
             });
