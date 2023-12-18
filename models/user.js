@@ -77,7 +77,7 @@ const userSchema = new mongoose.Schema(
     },
   },
 
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
 
 userSchema.post("save", handleMongooseError);
