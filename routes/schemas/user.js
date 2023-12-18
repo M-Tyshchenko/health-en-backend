@@ -9,36 +9,31 @@ const getStatsSchema = joi.object({
   dateTo: joi.date(),
 });
 
-const addFoodIntakeSchema = joi.object(
-    {
-    carbohidrates: joi.number().required(),
-    protein: joi.number().required(),
-    fat: joi.number().required(),
-    dish: joi.string().required(),
-    type: joi.string().valid("breakfast", "lunch", "dinner", "snack")
-    }
-)
+const addFoodIntakeSchema = joi.object({
+  carbohidrates: joi.number().required(),
+  protein: joi.number().required(),
+  fat: joi.number().required(),
+  dish: joi.string().required(),
+  type: joi.string().valid("breakfast", "lunch", "dinner", "snack"),
+});
 
 const schemas = {
   addWaterIntakeSchema,
-    getStatsSchema,
+  getStatsSchema,
   addFoodIntakeSchema,
 };
 
-const updateSchema = Joi.object({
-    name: Joi.string(),
-    email: Joi.string()
-      .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } }),
-    password: Joi.string(),
-    goal: Joi.string().valid("Lose fat", "Maintain", "Gain muscle"),
-    gender: Joi.string().valid("Male", "Female"),
-    age: Joi.number(),
-    height: Joi.number(),
-    weight: Joi.number(),
-    activity: Joi.number().valid(1.2, 1.375, 1.55, 1.725, 1.9),
-  });
+const updateSchema = joi.object({
+  name: joi.string().required(),
+  goal: joi.string().valid("Lose fat", "Maintain", "Gain muscle").required(),
+  gender: joi.string().valid("Male", "Female").required(),
+  age: joi.number().required(),
+  height: joi.number().required(),
+  weight: joi.number().required(),
+  activity: joi.number().valid(1.2, 1.375, 1.55, 1.725, 1.9).required(),
+});
 
 module.exports = {
-    schemas,
-    updateSchema,
-}
+  schemas,
+  updateSchema,
+};
