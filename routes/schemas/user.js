@@ -36,7 +36,6 @@ const updateSchema = Joi.object({
     height: Joi.number(),
     weight: Joi.number(),
     activity: Joi.number().valid(1.2, 1.375, 1.55, 1.725, 1.9),
-    avatarURL: Joi.string(),
   });
 
 module.exports = {
