@@ -225,5 +225,5 @@ module.exports = {
   saveFoodIntake,
   updateFoodIntake,
   deleteFoodIntake,
-  updateAvatar,
+  updateAvatar: ctrlWrapper(updateAvatar),
 };
