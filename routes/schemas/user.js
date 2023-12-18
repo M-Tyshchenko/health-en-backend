@@ -25,7 +25,6 @@ const schemas = {
 
 const updateSchema = joi.object({
   name: joi.string().required(),
-  goal: joi.string().valid("Lose fat", "Maintain", "Gain muscle").required(),
   gender: joi.string().valid("Male", "Female").required(),
   age: joi.number().required(),
   height: joi.number().required(),
