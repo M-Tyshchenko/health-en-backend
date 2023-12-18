@@ -46,7 +46,7 @@ async function getCurrentUser(req, res, next) {
 
 async function updateUser(req, res, next) {
   const id = req.user._id;
-  const body = authSchema.validate(req.body);
+  const body = updateSchema.validate(req.body);
 
   if (typeof body.error !== "undefined") {
     return res.status(400).json({
@@ -54,17 +54,8 @@ async function updateUser(req, res, next) {
     });
   }
 
-  const {
-    name,
-    email,
-    password,
-    goal,
-    gender,
-    age,
-    height,
-    weight,
-    activity,
-  } = req.body;
+  const { name, email, password, goal, gender, age, height, weight, activity } =
+    req.body;
   const hashPassword = await bcrypt.hash(password, 10);
   const bmr = calories(gender, age, height, weight, activity);
   const water = drink(weight, activity);
@@ -114,21 +105,21 @@ async function updateGoal(req, res, next) {
 
   const nutrients = elements(goal, user.bmr);
 
-  const newUser = {
-    goal,
-    bmr,
-    water,
-    nutrients: {
-      protein: nutrients.protein,
-      fat: nutrients.fat,
-      carbonohidrates: nutrients.carbonohidrates,
-    },
-  };
-
   try {
-    const updatedUser = await User.findByIdAndUpdate(id, newUser, {
-      new: true,
-    });
+    const updatedUser = await User.findByIdAndUpdate(
+      id,
+      {
+        goal,
+        nutrients: {
+          protein: nutrients.protein,
+          fat: nutrients.fat,
+          carbonohidrates: nutrients.carbonohidrates,
+        },
+      },
+      {
+        new: true,
+      }
+    );
     res.status(200).json({
       user: { goal: updatedUser.goal },
     });
