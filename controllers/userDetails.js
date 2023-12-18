@@ -1,6 +1,6 @@
 const User = require("../models/user");
 const { calories, drink, elements } = require("../helpers/calculations");
-const { authSchema } = require("../routes/schemas/auth");
+const { updateSchema } = require("../routes/schemas/user");
 const bcrypt = require("bcrypt");
 const {
   generateDailyConsumptionEntry,
@@ -45,7 +45,6 @@ async function getCurrentUser(req, res, next) {
 }
 
 async function updateUser(req, res, next) {
-  console.log(req.file);
   const id = req.user._id;
   const body = authSchema.validate(req.body);
 
@@ -65,7 +64,6 @@ async function updateUser(req, res, next) {
     height,
     weight,
     activity,
-    avatarURL,
   } = req.body;
   const hashPassword = await bcrypt.hash(password, 10);
   const bmr = calories(gender, age, height, weight, activity);
@@ -76,7 +74,6 @@ async function updateUser(req, res, next) {
     name,
     email,
     password: hashPassword,
-    avatarURL,
     goal,
     gender,
     age,
@@ -115,15 +112,7 @@ async function updateGoal(req, res, next) {
     return res.status(400).json({ message: "goal not changed" });
   }
 
-  const bmr = calories(
-    user.gender,
-    user.age,
-    user.height,
-    user.weight,
-    user.activity
-  );
-  const water = drink(user.weight, user.activity);
-  const nutrients = elements(goal, bmr);
+  const nutrients = elements(goal, user.bmr);
 
   const newUser = {
     goal,
