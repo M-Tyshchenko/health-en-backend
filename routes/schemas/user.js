@@ -5,8 +5,8 @@ const addWaterIntakeSchema = joi.object({
 });
 
 const getStatsSchema = joi.object({
-  dateFrom: joi.date(),
-  dateTo: joi.date(),
+  dateFrom: joi.string(),
+  dateTo: joi.string(),
 });
 
 const addFoodIntakeSchema = joi.object(

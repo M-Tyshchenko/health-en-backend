@@ -7,11 +7,14 @@ const createFormattedDateString = (ISODate) => {
 
 }
 const parseAndTransformDate = (date, parser) => {
+
   const parsedDate = Date.parse(date);
+  console.log(parsedDate)
   if (isNaN(parsedDate)) {
     return null;
   }
   const newDate = new Date(parsedDate)
+  
   return parser(newDate);
 
 } 
