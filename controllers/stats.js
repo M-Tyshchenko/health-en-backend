@@ -10,6 +10,8 @@ const {
 } = require("../helpers");
 const { Stats } = require("../models");
 
+
+
 const addWaterIntakeStats = async (req, res, next) => {
   const { _id: owner, weight } = req.user;
 
@@ -23,7 +25,7 @@ const addWaterIntakeStats = async (req, res, next) => {
       weight,
       waterIntake,
       date,
-    });
+    }, generateMealEntry);
     const newEntry = createNewStatsEntry(dailyEntry, owner);
     const result = await Stats.create(newEntry);
 
@@ -35,7 +37,7 @@ const addWaterIntakeStats = async (req, res, next) => {
   const isDailyCreated = await Stats.findOne({ owner, "dates.date": date });
 
   if (!isDailyCreated) {
-    const dailyEntry = generateDailyConsumptionEntry({ waterIntake, date });
+    const dailyEntry = generateDailyConsumptionEntry({ waterIntake, date }, generateMealEntry);
     const result = await Stats.findOneAndUpdate(
       { owner },
       { $push: { dates: dailyEntry } },
@@ -44,6 +46,7 @@ const addWaterIntakeStats = async (req, res, next) => {
     res.status(200).json({
       waterIntake: result.dates[result.dates.length - 1].stats.waterIntake,
     });
+    return;
   }
 
   const result = await Stats.findOneAndUpdate(
@@ -146,12 +149,7 @@ const addFoodIntakeStats = async (req, res, next) => {
 };
 
 const updateFoodIntakeInfo = async (req, res, next) => {
-  // console.log(req.params)
-  // const { _id: owner } = req.user;
-  // const { id } = req.params;
-  // const mealEntry = generateMealEntry(req.body);
-  // console.log(mealEntry)
-  // const result = await Stats.findOneAndUpdate({ owner, 'dates.stats.foodIntake': { $elemMatch: { _id: id } } }, { mealEntry });
+
 };
 
 const resetWaterIntakeStats = async (req, res, next) => {
@@ -175,6 +173,7 @@ const resetWaterIntakeStats = async (req, res, next) => {
 };
 
 const getTotalConsumptionStats = async (req, res, next) => {
+
   const { _id: owner } = req.user;
   const { dateFrom, dateTo } = req.body;
   const validFromDate = parseAndTransformDate(

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+
 const StatsController = require("../../controllers/stats");
 const DetailsController = require("../../controllers/userDetails");
 const { authenticate, validateBody, upload } = require("../../middlewares");
@@ -56,3 +57,4 @@ router.get(
 );
 
 module.exports = router;
+

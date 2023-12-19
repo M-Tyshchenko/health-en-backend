@@ -5,8 +5,8 @@ const addWaterIntakeSchema = joi.object({
 });
 
 const getStatsSchema = joi.object({
-  dateFrom: joi.date(),
-  dateTo: joi.date(),
+  dateFrom: joi.string(),
+  dateTo: joi.string(),
 });
 
 const addFoodIntakeSchema = joi.object({
@@ -17,10 +17,21 @@ const addFoodIntakeSchema = joi.object({
   type: joi.string().valid("breakfast", "lunch", "dinner", "snack"),
 });
 
+const updateFoodIntakeSchema = joi.object(
+  {
+        carbohidrates: joi.number().required(),
+    protein: joi.number().required(),
+    fat: joi.number().required(),
+    dish: joi.string().required(),
+        type: joi.string().valid("breakfast", "lunch", "dinner", "snack")
+  }
+)
+
 const schemas = {
   addWaterIntakeSchema,
   getStatsSchema,
   addFoodIntakeSchema,
+  updateFoodIntakeSchema
 };
 
 const updateSchema = joi.object({
