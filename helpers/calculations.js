@@ -9,7 +9,7 @@ const calories = (gender, age, height, weight, activity) => {
 };
 
 const drink = (weight, activity) => {
-  const basicWater = weight * 0.03 * 1000;
+  const basicWater = weight * 0.03;
   let water;
 
   switch (activity) {
@@ -26,7 +26,7 @@ const drink = (weight, activity) => {
       water = (basicWater + 0.7) * 1000;
       break;
     default:
-      water = basicWater;
+      water = basicWater * 1000;
   }
 
   return water;

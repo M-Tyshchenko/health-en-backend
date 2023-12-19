@@ -1,28 +1,60 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const StatsController = require('../../controllers/stats')
-const DetailsController = require('../../controllers/userDetails');
-const { authenticate, validateBody } = require('../../middlewares')
-const {schemas} = require('../schemas')
 
-router.get('/current', DetailsController.getCurrentUser);
+const StatsController = require("../../controllers/stats");
+const DetailsController = require("../../controllers/userDetails");
+const { authenticate, validateBody, upload } = require("../../middlewares");
+const { schemas } = require("../schemas");
 
-router.put('/update', DetailsController.updateUser);
+router.get("/current", DetailsController.getCurrentUser);
 
-router.put('/goal', DetailsController.updateGoal);
+router.put("/update", DetailsController.updateUser);
 
-router.post('/weight', DetailsController.updateWeight);
+router.post(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  DetailsController.updateAvatar
+);
 
-router.post('/food-intake', authenticate, validateBody(schemas.addFoodIntakeSchema), StatsController.addFoodIntakeStats);
+router.put("/goal", DetailsController.updateGoal);
 
-router.put('/food-intake/:id', authenticate, validateBody(schemas.updateFoodIntakeSchema), StatsController.updateFoodIntakeInfo);
+router.post("/weight", DetailsController.updateWeight);
 
-router.delete('/food-intake', DetailsController.deleteFoodIntake);
+router.post(
+  "/food-intake",
+  authenticate,
+  validateBody(schemas.addFoodIntakeSchema),
+  StatsController.addFoodIntakeStats
+);
 
-router.post('/water-intake', authenticate, validateBody(schemas.addWaterIntakeSchema), StatsController.addWaterIntakeStats)
+router.put(
+  "/food-intake/:id",
+  authenticate,
+  StatsController.updateFoodIntakeInfo
+);
 
-router.delete('/water-intake', authenticate, StatsController.resetWaterIntakeStats)
+router.delete("/food-intake", DetailsController.deleteFoodIntake);
 
-router.get('/statistics', authenticate, validateBody(schemas.getStatsSchema), StatsController.getTotalConsumptionStats);
+router.post(
+  "/water-intake",
+  authenticate,
+  validateBody(schemas.addWaterIntakeSchema),
+  StatsController.addWaterIntakeStats
+);
+
+router.delete(
+  "/water-intake",
+  authenticate,
+  StatsController.resetWaterIntakeStats
+);
+
+router.get(
+  "/statistics",
+  authenticate,
+  validateBody(schemas.getStatsSchema),
+  StatsController.getTotalConsumptionStats
+);
 
 module.exports = router;
+

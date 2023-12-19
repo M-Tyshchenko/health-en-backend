@@ -12,6 +12,8 @@ const gravatar = require("gravatar");
 
 const User = require("../models/user");
 
+const { HTTPError, ctrlWrapper } = require("../helpers");
+
 const {
   authSchema,
   loginSchema,
@@ -29,7 +31,7 @@ apikey.apiKey = process.env.ELASTIC_API_KEY;
 const api = new ElasticEmail.EmailsApi();
 
 // --------------- REGISTRATION ---------------------//
-async function register(req, res, next) {
+async function register(req, res) {
   const body = authSchema.validate(req.body);
   const userBody = body.value;
 
@@ -49,33 +51,26 @@ async function register(req, res, next) {
   const water = drink(weight, activity);
   const nutrients = elements(goal, bmr);
 
-  try {
-    const newUser = await User.create({
-      ...userBody,
-      password: hashPassword,
-      avatarURL,
-      bmr,
-      water,
-      nutrients: {
-        protein: nutrients.protein,
-        fat: nutrients.fat,
-        carbonohidrates: nutrients.carbonohidrates,
-      },
-    });
+  const newUser = await User.create({
+    ...userBody,
+    password: hashPassword,
+    avatarURL,
+    bmr,
+    water,
+    nutrients: {
+      protein: nutrients.protein,
+      fat: nutrients.fat,
+      carbonohidrates: nutrients.carbonohidrates,
+    },
+  });
 
-    res.status(201).json({
-      user: { name: newUser.name, email: newUser.email },
-    });
-  } catch (err) {
-    if (err.name === "MongoServerError" && err.code === 11000) {
-      return res.status(409).json({ message: "Email in use" });
-    }
-    next(err);
-  }
+  res.status(201).json({
+    user: { name: newUser.name, email: newUser.email },
+  });
 }
 
 // --------------- LOGIN ---------------------//
-async function login(req, res, next) {
+async function login(req, res) {
   const body = loginSchema.validate(req.body);
 
   if (typeof body.error !== "undefined") {
@@ -89,37 +84,29 @@ async function login(req, res, next) {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return res.status(401).json({
-      message: "Email or password is wrong",
-    });
+    throw HTTPError(401, "Email or password is wrong");
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
 
   if (!passwordCompare) {
-    return res.status(401).json({
-      message: "Email or password is wrong",
-    });
+    throw HTTPError(401, "Email or password is wrong");
   }
 
   const payload = { id: user._id };
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1w" });
   await User.findByIdAndUpdate(user._id, { token });
 
-  try {
-    jwt.verify(token, SECRET_KEY);
+  jwt.verify(token, SECRET_KEY);
 
-    res.json({
-      token,
-      user: { email: user.email },
-    });
-  } catch (err) {
-    next(err);
-  }
+  res.json({
+    token,
+    user: { email: user.email },
+  });
 }
 
 // --------------- FORGOT PASSWORD ---------------------//
-async function forgotPsw(req, res, next) {
+async function forgotPsw(req, res) {
   const newPassword = crypto.randomUUID();
   const hashPassword = await bcrypt.hash(newPassword, 10);
 
@@ -133,39 +120,35 @@ async function forgotPsw(req, res, next) {
 
   const { email } = req.body;
 
-  try {
-    const user = await User.findOne({ email }).exec();
+  const user = await User.findOne({ email }).exec();
 
-    if (user === null) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    if (user.token !== "") {
-      return res.status(400).json({ message: "User has already been passed" });
-    }
-
-    await User.findByIdAndUpdate(user._id, { password: hashPassword });
-
-    const forgotPswEmail = ElasticEmail.EmailMessageData.constructFromObject({
-      Recipients: [new ElasticEmail.EmailRecipient(email)],
-      Content: {
-        Body: [
-          ElasticEmail.BodyPart.constructFromObject({
-            ContentType: "HTML",
-            Content: `If you forgot your password, use this one: ${newPassword}`,
-          }),
-        ],
-        Subject: "You forgot your password for login in Health app",
-        From: FROM_EMAIL,
-      },
-    });
-
-    api.emailsPost(forgotPswEmail);
-
-    res.json({ message: "New password sent" });
-  } catch (error) {
-    next(error);
+  if (user === null) {
+    throw HTTPError(404, "User not found");
   }
+
+  if (user.token !== "") {
+    throw HTTPError(400, "User has already logged in");
+  }
+
+  await User.findByIdAndUpdate(user._id, { password: hashPassword });
+
+  const forgotPswEmail = ElasticEmail.EmailMessageData.constructFromObject({
+    Recipients: [new ElasticEmail.EmailRecipient(email)],
+    Content: {
+      Body: [
+        ElasticEmail.BodyPart.constructFromObject({
+          ContentType: "HTML",
+          Content: `If you forgot your password, use this one: ${newPassword}`,
+        }),
+      ],
+      Subject: "You forgot your password for login in Health app",
+      From: FROM_EMAIL,
+    },
+  });
+
+  api.emailsPost(forgotPswEmail);
+
+  res.json({ message: "New password sent" });
 }
 
 // --------------- LOGOUT ---------------------//
@@ -178,8 +161,8 @@ async function logout(req, res) {
 }
 
 module.exports = {
-  register,
-  login,
-  forgotPsw,
-  logout,
+  register: ctrlWrapper(register),
+  login: ctrlWrapper(login),
+  forgotPsw: ctrlWrapper(forgotPsw),
+  logout: ctrlWrapper(logout),
 };

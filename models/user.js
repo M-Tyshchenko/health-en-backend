@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { handleMongooseError } = require("../helpers");
 
 const userSchema = new mongoose.Schema(
   {
@@ -20,14 +21,14 @@ const userSchema = new mongoose.Schema(
 
     goal: {
       type: String,
-      enum: ["Lose fat", "Maintain", "Gain muscle"],
-      default: "Lose fat",
+      enum: ["lose fat", "maintain", "gain muscle"],
+      default: "lose fat",
     },
 
     gender: {
       type: String,
-      enum: ["Male", "Female"],
-      default: "Male",
+      enum: ["male", "female"],
+      default: "male",
     },
 
     age: {
@@ -76,7 +77,9 @@ const userSchema = new mongoose.Schema(
     },
   },
 
-  { versionKey: false }
+  { versionKey: false, timestamps: true }
 );
+
+userSchema.post("save", handleMongooseError);
 
 module.exports = mongoose.model("User", userSchema);
