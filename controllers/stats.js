@@ -192,8 +192,10 @@ const getTotalConsumptionStats = async (req, res, next) => {
       $lte: validToDate,
     },
   });
-  if (!result) {
-    throw HTTPError(404, "No records found within the given period");
+
+  if (!result.length) {
+    res.status(200).json({ message: "No records found within the given period" });
+    return;
   }
 
   res.status(200).json(result[0].dates);
