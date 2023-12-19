@@ -6,8 +6,8 @@ const authSchema = Joi.object({
     .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
     .required(),
   password: Joi.string().required(),
-  goal: Joi.string().valid("Lose fat", "Maintain", "Gain muscle").required(),
-  gender: Joi.string().valid("Male", "Female").required(),
+  goal: Joi.string().valid("lose fat", "maintain", "gain muscle").required(),
+  gender: Joi.string().valid("male", "female").required(),
   age: Joi.number().required(),
   height: Joi.number().required(),
   weight: Joi.number().required(),
