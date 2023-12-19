@@ -15,7 +15,7 @@ router.post('/weight', DetailsController.updateWeight);
 
 router.post('/food-intake', authenticate, validateBody(schemas.addFoodIntakeSchema), StatsController.addFoodIntakeStats);
 
-router.put('/food-intake/:id', authenticate, StatsController.updateFoodIntakeInfo);
+router.put('/food-intake/:id', authenticate, validateBody(schemas.updateFoodIntakeSchema), StatsController.updateFoodIntakeInfo);
 
 router.delete('/food-intake', DetailsController.deleteFoodIntake);
 

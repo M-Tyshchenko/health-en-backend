@@ -19,10 +19,21 @@ const addFoodIntakeSchema = joi.object(
     }
 )
 
+const updateFoodIntakeSchema = joi.object(
+  {
+        carbohidrates: joi.number().required(),
+    protein: joi.number().required(),
+    fat: joi.number().required(),
+    dish: joi.string().required(),
+        type: joi.string().valid("breakfast", "lunch", "dinner", "snack")
+  }
+)
+
 const schemas = {
   addWaterIntakeSchema,
     getStatsSchema,
   addFoodIntakeSchema,
+  updateFoodIntakeSchema
 };
 
 module.exports = {
