@@ -10,8 +10,6 @@ const {
 } = require("../helpers");
 const { Stats } = require("../models");
 
-
-
 const addWaterIntakeStats = async (req, res, next) => {
   const { _id: owner, weight } = req.user;
 
@@ -21,11 +19,14 @@ const addWaterIntakeStats = async (req, res, next) => {
   const isOwnerPresent = await Stats.findOne({ owner });
 
   if (!isOwnerPresent) {
-    const dailyEntry = generateDailyConsumptionEntry({
-      weight,
-      waterIntake,
-      date,
-    }, generateMealEntry);
+    const dailyEntry = generateDailyConsumptionEntry(
+      {
+        weight,
+        waterIntake,
+        date,
+      },
+      generateMealEntry
+    );
     const newEntry = createNewStatsEntry(dailyEntry, owner);
     const result = await Stats.create(newEntry);
 
@@ -37,7 +38,10 @@ const addWaterIntakeStats = async (req, res, next) => {
   const isDailyCreated = await Stats.findOne({ owner, "dates.date": date });
 
   if (!isDailyCreated) {
-    const dailyEntry = generateDailyConsumptionEntry({ waterIntake, date }, generateMealEntry);
+    const dailyEntry = generateDailyConsumptionEntry(
+      { waterIntake, date },
+      generateMealEntry
+    );
     const result = await Stats.findOneAndUpdate(
       { owner },
       { $push: { dates: dailyEntry } },
@@ -149,7 +153,52 @@ const addFoodIntakeStats = async (req, res, next) => {
 };
 
 const updateFoodIntakeInfo = async (req, res, next) => {
+  const { _id: owner } = req.user;
+  const { id } = req.params;
+  const { type, dish, carbohidrates, protein, fat } = req.body;
 
+  const updateQuery = {
+    $set: {
+      "dates.$[dateElement].stats.foodIntake.breakfast.$[foodIntakeElement].carbohidrates":
+        carbohidrates,
+      "dates.$[dateElement].stats.foodIntake.breakfast.$[foodIntakeElement].protein":
+        protein,
+      "dates.$[dateElement].stats.foodIntake.breakfast.$[foodIntakeElement].fat":
+        fat,
+      "dates.$[dateElement].stats.foodIntake.breakfast.$[foodIntakeElement].dish":
+        dish,
+    },
+  };
+  const arrayFilters = [
+    { [`dateElement.stats.foodIntake.${type}._id`]: id },
+    { "foodIntakeElement._id": id },
+  ];
+
+  const result = await Stats.findOneAndUpdate(
+    { owner, [`dates.stats.foodIntake.${type}._id`]: id },
+    updateQuery,
+    {
+      new: true,
+      arrayFilters,
+      projection: {
+        dates: {
+          $elemMatch: {
+            [`stats.foodIntake.${type}`]: {
+              $elemMatch: {
+                _id: id,
+              },
+            },
+          },
+        },
+      },
+    }
+  );
+
+  if (!result) {
+    res.status(200).json({message: "no results found"})
+  }
+
+  res.status(200).json(result);
 };
 
 const resetWaterIntakeStats = async (req, res, next) => {
@@ -173,7 +222,6 @@ const resetWaterIntakeStats = async (req, res, next) => {
 };
 
 const getTotalConsumptionStats = async (req, res, next) => {
-
   const { _id: owner } = req.user;
   const { dateFrom, dateTo } = req.body;
   const validFromDate = parseAndTransformDate(
@@ -194,7 +242,9 @@ const getTotalConsumptionStats = async (req, res, next) => {
   });
 
   if (!result.length) {
-    res.status(200).json({ message: "No records found within the given period" });
+    res
+      .status(200)
+      .json({ message: "No records found within the given period" });
     return;
   }
 
