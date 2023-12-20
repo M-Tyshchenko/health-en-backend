@@ -32,8 +32,10 @@ const addWaterIntakeStats = async (req, res, next) => {
     const result = await Stats.create(newEntry);
 
     res.status(200).json({
+      message: `water intake increased by ${waterIntake} ml`,
       waterIntake: result.dates[result.dates.length - 1].stats.waterIntake,
     });
+    return;
   }
 
   const isDailyCreated = await Stats.findOne({ owner, "dates.date": date });
@@ -134,7 +136,7 @@ const addFoodIntakeStats = async (req, res, next) => {
 
     res
       .status(200)
-      .json({ result: result.dates[result.dates.length - 1].stats.foodIntake });
+      .json({ message: "Food intake successfuly added", result: result.dates[result.dates.length - 1].stats.foodIntake });
     return;
   }
   const mealEntry = generateMealEntry({ carbohidrates, protein, fat, dish });
@@ -200,7 +202,6 @@ const updateFoodIntakeInfo = async (req, res, next) => {
   }
 
   const transfomedResult = result.dates[0].stats.foodIntake[type].filter(unit => unit._id.toString() === id)
-  console.log(transfomedResult)
   res.status(200).json({message: "Update successful", data: transfomedResult[0]});
 };
 
@@ -277,7 +278,7 @@ const getTotalConsumptionStats = async (req, res, next) => {
     return;
   }
 
-  res.status(200).json(result[0].dates);
+  res.status(200).json({data: result[0].dates});
 };
 
 module.exports = {

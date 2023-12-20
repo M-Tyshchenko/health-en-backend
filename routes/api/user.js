@@ -46,7 +46,7 @@ router.post(
 
 router.delete(
   "/water-intake",
-  authenticate,
+  authenticate, validateBody(schemas.resetFoodIntakeSchema),
   StatsController.resetWaterIntakeStats
 );
 
