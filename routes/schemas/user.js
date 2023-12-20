@@ -1,7 +1,7 @@
 const joi = require("joi");
 
 const addWaterIntakeSchema = joi.object({
-  waterIntake: joi.number().required().max(7000),
+  waterIntake: joi.number().required().max(7000).positive(),
 });
 
 const getStatsSchema = joi.object({
@@ -25,11 +25,18 @@ const updateFoodIntakeSchema = joi.object({
   type: joi.string().valid("breakfast", "lunch", "dinner", "snack"),
 });
 
+const resetFoodIntakeSchema = joi.object(
+  {
+    type: joi.string().valid("breakfast", "lunch", "dinner", "snack"),
+  }
+)
+
 const schemas = {
   addWaterIntakeSchema,
   getStatsSchema,
   addFoodIntakeSchema,
   updateFoodIntakeSchema,
+  resetFoodIntakeSchema,
 };
 
 const updateSchema = joi.object({
