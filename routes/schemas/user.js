@@ -15,6 +15,7 @@ const addFoodIntakeSchema = joi.object({
   fat: joi.number().required(),
   dish: joi.string().required(),
   type: joi.string().valid("breakfast", "lunch", "dinner", "snack"),
+  calories: joi.number().required(),
 });
 
 const updateFoodIntakeSchema = joi.object({
@@ -23,6 +24,7 @@ const updateFoodIntakeSchema = joi.object({
   fat: joi.number().required(),
   dish: joi.string().required(),
   type: joi.string().valid("breakfast", "lunch", "dinner", "snack"),
+  calories: joi.number().required(),
 });
 
 const resetFoodIntakeSchema = joi.object(
