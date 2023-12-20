@@ -1,13 +1,14 @@
 // generate mealEntry object for 1 separate food intake
-const generateMealEntry = ({ carbohidrates, protein, fat, dish }) => {
-  const x = { carbohidrates, protein, fat, dish };
+const generateMealEntry = ({ carbohidrates, protein, fat, dish, calories }) => {
+  const x = { carbohidrates, protein, fat, dish, calories };
 
   return x;
 };
 // creates query finding desired mealIntake
-const createFoodIntakeQuery = (type, mealEntry) => {
+const createFoodIntakeQuery = (type, mealEntry, calories) => {
   const query = {
-    $push: { [`dates.$.stats.foodIntake.${type}`]: mealEntry },
+    $push: { [`dates.$.stats.foodIntake.${type}`]: mealEntry }, 
+    $inc: { "dates.$.stats.totalCalories": calories }
   };
 
   return query;
@@ -26,9 +27,10 @@ const generateDailyConsumptionEntry = (params, mealUnitGenerator) => {
     calories = 0,
     weight = 0,
     date,
+    totalCalories = calories || 0,
   } = params;
 
-  const mealObject = mealUnitGenerator({ carbohidrates, protein, fat, dish });
+  const mealObject = mealUnitGenerator({ carbohidrates, protein, fat, dish, calories });
 
   const x = {
     date,
@@ -37,7 +39,7 @@ const generateDailyConsumptionEntry = (params, mealUnitGenerator) => {
       foodIntake: {
         [type]: [mealObject],
       },
-      calories,
+      totalCalories,
       weight,
     },
   };
