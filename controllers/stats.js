@@ -1,3 +1,4 @@
+
 const {
   ctrlWrapper,
   HTTPError,
@@ -159,13 +160,13 @@ const updateFoodIntakeInfo = async (req, res, next) => {
 
   const updateQuery = {
     $set: {
-      "dates.$[dateElement].stats.foodIntake.breakfast.$[foodIntakeElement].carbohidrates":
+      [`dates.$[dateElement].stats.foodIntake.${type}.$[foodIntakeElement].carbohidrates`]:
         carbohidrates,
-      "dates.$[dateElement].stats.foodIntake.breakfast.$[foodIntakeElement].protein":
+      [`dates.$[dateElement].stats.foodIntake.${type}.$[foodIntakeElement].protein`]:
         protein,
-      "dates.$[dateElement].stats.foodIntake.breakfast.$[foodIntakeElement].fat":
+      [`dates.$[dateElement].stats.foodIntake.${type}.$[foodIntakeElement].fat`]:
         fat,
-      "dates.$[dateElement].stats.foodIntake.breakfast.$[foodIntakeElement].dish":
+      [`dates.$[dateElement].stats.foodIntake.${type}.$[foodIntakeElement].dish`]:
         dish,
     },
   };
@@ -195,11 +196,39 @@ const updateFoodIntakeInfo = async (req, res, next) => {
   );
 
   if (!result) {
-    res.status(200).json({message: "no results found"})
+    res.status(204).json({message: "no results found"})
   }
 
-  res.status(200).json(result);
+  const transfomedResult = result.dates[0].stats.foodIntake[type].filter(unit => unit._id.toString() === id)
+  console.log(transfomedResult)
+  res.status(200).json({message: "Update successful", data: transfomedResult[0]});
 };
+
+const resetFoodIntakeStats = async(req, res, next) => {
+  const { _id: owner } = req.user;
+  const {type} = req.body;
+  const date = createFormattedDateString()
+
+  const isPresent = await Stats.findOne({owner, 'dates.date': date});
+
+  if (!isPresent) {
+    res.status(200).json({message: "No records match requested date"})
+    return;
+  }
+
+  const updateQuery = {$unset: {
+    [`dates.$[dateElement].stats.foodIntake.${type}`]: 1
+  }}
+
+  const arrayFilters = [{"dateElement.date": date}]
+
+  const result = await Stats.findOneAndUpdate({owner, 'dates.date': date}, updateQuery, {new: true, arrayFilters})
+  res.status(200).json({
+    message: `food intake stats for ${type} for today successfuly reset`,
+    [type]: result.dates[result.dates.length - 1].stats.foodIntake[type]})
+
+}
+
 
 const resetWaterIntakeStats = async (req, res, next) => {
   const { _id: owner } = req.user;
@@ -257,4 +286,5 @@ module.exports = {
   getTotalConsumptionStats: ctrlWrapper(getTotalConsumptionStats),
   addFoodIntakeStats: ctrlWrapper(addFoodIntakeStats),
   updateFoodIntakeInfo: ctrlWrapper(updateFoodIntakeInfo),
+  resetFoodIntakeStats: ctrlWrapper(resetFoodIntakeStats),
 };
