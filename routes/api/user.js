@@ -31,10 +31,11 @@ router.post(
 router.put(
   "/food-intake/:id",
   authenticate,
+  validateBody(schemas.updateFoodIntakeSchema),
   StatsController.updateFoodIntakeInfo
 );
 
-router.delete("/food-intake", DetailsController.deleteFoodIntake);
+router.delete("/food-intake", authenticate, StatsController.resetFoodIntakeStats);
 
 router.post(
   "/water-intake",
@@ -57,4 +58,3 @@ router.get(
 );
 
 module.exports = router;
-
