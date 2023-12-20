@@ -23,6 +23,11 @@ const foodIntakeSchema = new Schema({
     required: false,
     default: null
   },
+    calories: {
+    type: Number,
+    default: 0,
+    required: true,
+  },
 });
 
 const dailySchema = new Schema(
@@ -40,7 +45,7 @@ const dailySchema = new Schema(
       dinner: [foodIntakeSchema],
       snack: [foodIntakeSchema],
     },
-    calories: {
+    totalCalories: {
       type: Number,
       default: 0,
       required: true,
