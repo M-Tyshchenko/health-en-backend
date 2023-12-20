@@ -13,6 +13,11 @@
     {
       "name": "Auth",
       "description": "Authorization endpoints"
+    },
+
+    {
+      "name": "Avatar",
+      "description": "Update user's avatar endpoint"
     }
   ],
 
@@ -239,7 +244,7 @@
       "post": {
         "tags": ["Stats", "Food-intake"],
         "summary": "Add food intake info",
-        "parameters":[],
+        "parameters": [],
         "requestBody": {
           "description": "addFoodIntake object",
           "required": true,
@@ -281,7 +286,7 @@
       "put": {
         "tags": ["Stats", "Food-intake"],
         "summary": "pdate food intake entry by id",
-        "parameters":[
+        "parameters": [
           {
             "name": "id",
             "in": "path",
@@ -376,6 +381,42 @@
           },
           "500": {
             "description": "Server error",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/user/avatars": {
+      "post": {
+        "tags": ["Avatar"],
+        "summary": "Updating user's avatar",
+        "parameters": [],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "description": "Avatar file",
+          "required": true,
+          "content": {}
+        },
+        "responses": {
+          "200": {
+            "description": "User's avatar updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "avatarURL": {
+                      "type": "string",
+                      "description": "User's avatar url"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (image is undefined)",
             "content": {}
           }
         }
@@ -541,7 +582,7 @@
       },
       "AddFoodIntakeRequest": {
         "type": "object",
-        "required":["carbohidrates", "protein", "fat", "dish", "type"],
+        "required": ["carbohidrates", "protein", "fat", "dish", "type"],
         "properties": {
           "carbohidrates": {
             "type": "number",
@@ -709,7 +750,7 @@
       },
       "UpdateFoodIntakeRequest": {
         "type": "object",
-        "required":["carbohidrates", "protein", "fat", "dish", "type"],
+        "required": ["carbohidrates", "protein", "fat", "dish", "type"],
         "properties": {
           "carbohidrates": {
             "type": "number",
@@ -827,7 +868,7 @@
                       "type": "array",
                       "items": {
                         "type": "object",
-                        "properties":{
+                        "properties": {
                           "carbohidrates": {
                             "type": "number",
                             "description": "respective nutrition element value",
@@ -858,17 +899,17 @@
                     }
                   }
                 },
-                "waterIntake":{
+                "waterIntake": {
                   "type": "number",
                   "description": "water-intake value in ml",
                   "example": 1500
                 },
-                "calories":{
+                "calories": {
                   "type": "number",
                   "description": "calories value",
                   "example": 1000
                 },
-                "weight":{
+                "weight": {
                   "type": "number",
                   "description": "user's weight as of certain date",
                   "example": 1000
@@ -885,7 +926,6 @@
               "description": "id of day object",
               "example": "657f46c67f454d34f0e89e2f"
             }
-
           }
         }
       },
