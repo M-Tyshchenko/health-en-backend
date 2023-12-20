@@ -40,22 +40,22 @@ const elements = (goal, bmr) => {
   };
 
   switch (goal) {
-    case "Lose fat":
+    case "lose fat":
       nutrients.protein = Math.round(bmr * 0.25);
       nutrients.fat = Math.round(bmr * 0.2);
       nutrients.carbonohidrates = Math.round(bmr * 0.55);
       break;
-    case "Gain muscle":
+    case "gain muscle":
       nutrients.protein = Math.round(bmr * 0.3);
       nutrients.fat = Math.round(bmr * 0.2);
       nutrients.carbonohidrates = Math.round(bmr * 0.5);
       break;
-    case "Maintain":
+    case "maintain":
       nutrients.protein = Math.round(bmr * 0.2);
       nutrients.fat = Math.round(bmr * 0.25);
       nutrients.carbonohidrates = Math.round(bmr * 0.55);
   }
-  console.log(nutrients.carbonohidrates);
+
   return nutrients;
 };
 
