@@ -163,6 +163,7 @@
         }
       }
     },
+
     "/api/user/water-intake": {
       "post": {
         "tags": ["Stats"],
@@ -178,7 +179,7 @@
               }
             }
           }
-        },  
+        },
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -234,6 +235,7 @@
         }
       }
     },
+    
     "/api/user/statistics": {
       "get": {
         "tags": ["Statistics"],
@@ -345,6 +347,10 @@
       "RegistrationResponse": {
         "type": "object",
         "properties": {
+          "token": {
+            "type": "string",
+            "description": "User's token"
+          },
           "name": {
             "type": "string",
             "description": "User's name",
