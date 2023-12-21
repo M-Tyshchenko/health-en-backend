@@ -18,6 +18,11 @@
     {
       "name": "Avatar",
       "description": "Update user's avatar endpoint"
+    },
+
+    {
+      "name": "Recommended foods",
+      "description": "Getting recommended foods list"
     }
   ],
 
@@ -417,6 +422,30 @@
           },
           "400": {
             "description": "Bad request (image is undefined)",
+            "content": {}
+          }
+        }
+      }
+    },
+
+    "/api/recommended-food": {
+      "get": {
+        "tags": ["Recommended foods"],
+        "parameters": [],
+
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/getRecommendedFoodsResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
             "content": {}
           }
         }
@@ -995,6 +1024,61 @@
           }
         }
       },
+
+      "getRecommendedFoodsResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "nutrition": {
+              "type": "object",
+              "properties": {
+                "carbonohidrates": {
+                  "type": "number",
+                  "description": "Carbonohidrates amount in food",
+                  "example": 20
+                },
+                "protein": {
+                  "type": "number",
+                  "description": "Protein amount in food",
+                  "example": 6
+                },
+                "fat": {
+                  "type": "number",
+                  "description": "Fat amount in food",
+                  "example": 2
+                }
+              }
+            },
+            "_id": {
+              "type": "string",
+              "description": "Food id",
+              "example": "657f46c67f454d34f0e89e30"
+            },
+            "name": {
+              "type": "string",
+              "description": "Food name",
+              "example": "Nuts"
+            },
+            "amount": {
+              "type": "string",
+              "description": "Amount of food",
+              "example": "100 g"
+            },
+            "img": {
+              "type": "string",
+              "description": "Image link",
+              "example": "https://ftp.goit.study/img/you_health/Nuts.png"
+            },
+            "calories": {
+              "type": "number",
+              "description": "calories value",
+              "example": 650
+            }
+          }
+        }
+      },
+
       "securitySchemes": {
         "Bearer": {
           "type": "http",
