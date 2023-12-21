@@ -212,7 +212,6 @@ const updateFoodIntakeInfo = async (req, res) => {
     },
 
     $inc: {
-      [`dates.$[dateElement].stats.totalCalories`]: -prevValue,
       [`dates.$[dateElement].stats.totalCalories`]: calories,
     },
   };
@@ -273,6 +272,9 @@ const resetFoodIntakeStats = async (req, res) => {
     $unset: {
       [`dates.$[dateElement].stats.foodIntake.${type}`]: 1,
     },
+    $set: {
+      [`dates.$[dateElement].stats.totalCalories`]: 1,
+    }
   };
 
   const arrayFilters = [{ "dateElement.date": date }];
