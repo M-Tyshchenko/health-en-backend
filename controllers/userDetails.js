@@ -170,19 +170,6 @@ async function updateWeight(req, res, next) {
   }
 }
 
-async function saveFoodIntake(req, res, next) {
-  res.status(200).json({ message: "food is intaked" });
-}
-
-async function updateFoodIntake(req, res, next) {
-  const { id } = req.params;
-  res.status(200).json({ message: `food intake ${id} updated` });
-}
-
-async function deleteFoodIntake(req, res, next) {
-  res.status(200).json({ message: `food intake deleted` });
-}
-
 async function updateAvatar(req, res) {
   const { _id } = req.user;
 
@@ -200,8 +187,5 @@ module.exports = {
   updateUser,
   updateGoal,
   updateWeight,
-  saveFoodIntake,
-  updateFoodIntake,
-  deleteFoodIntake,
   updateAvatar: ctrlWrapper(updateAvatar),
 };
