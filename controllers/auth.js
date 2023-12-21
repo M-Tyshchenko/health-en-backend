@@ -68,10 +68,10 @@ async function register(req, res) {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1w" });
 
   await User.findByIdAndUpdate(newUser._id, { token });
-
+  const user = await User.findOne(newUser._id).exec();
   res.status(201).json({
     token,
-    user: { name: newUser.name, email: newUser.email },
+    user,
   });
 }
 
@@ -107,7 +107,7 @@ async function login(req, res) {
 
   res.json({
     token,
-    user: { email: user.email },
+    user,
   });
 }
 
