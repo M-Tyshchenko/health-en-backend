@@ -300,6 +300,30 @@
               }
             }
           }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetFoodIntakeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (email or password is wrong)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found. User has no such records that may be reset on that date",
+            "content": {}
+          },
+          "500": {
+            "description": "Server error",
+            "content": {}
+          }
         }
       }
     },
@@ -335,21 +359,12 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdateFoodIntakeSuccessResponse"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
                   "$ref": "#/components/schemas/UpdateFoodIntakeResponse"
                 }
               }
             }
           },
+
           "400": {
             "description": "Bad request (invalid request body)",
             "content": {}
@@ -903,6 +918,19 @@
             "type": "string",
             "description": "food intake type",
             "example": "dinner"
+          }
+        }
+      },
+      "ResetFoodIntakeResponse": {
+"type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "success message",
+            "example": "water intake stats has been successfuly reset"
+          },
+          "type": {
+            "type": "array"
           }
         }
       },
