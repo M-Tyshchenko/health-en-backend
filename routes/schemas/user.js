@@ -41,6 +41,7 @@ const schemas = {
 
 const updateSchema = joi.object({
   name: joi.string().required(),
+  email: joi.string().required(),
   gender: joi.string().valid("male", "female").required(),
   age: joi.number().required(),
   height: joi.number().required(),

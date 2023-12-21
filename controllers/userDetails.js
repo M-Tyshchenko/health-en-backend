@@ -56,7 +56,7 @@ async function updateUser(req, res, next) {
     });
   }
 
-  const { name, gender, age, height, weight, activity } = req.body;
+  const { name, email, gender, age, height, weight, activity } = req.body;
 
   const bmr = calories(gender, age, height, weight, activity);
   const water = drink(weight, activity);
@@ -64,6 +64,7 @@ async function updateUser(req, res, next) {
 
   const newUser = {
     name,
+    email,
     gender,
     age,
     height,
@@ -170,19 +171,6 @@ async function updateWeight(req, res, next) {
   }
 }
 
-async function saveFoodIntake(req, res, next) {
-  res.status(200).json({ message: "food is intaked" });
-}
-
-async function updateFoodIntake(req, res, next) {
-  const { id } = req.params;
-  res.status(200).json({ message: `food intake ${id} updated` });
-}
-
-async function deleteFoodIntake(req, res, next) {
-  res.status(200).json({ message: `food intake deleted` });
-}
-
 async function updateAvatar(req, res) {
   const { _id } = req.user;
 
@@ -200,8 +188,5 @@ module.exports = {
   updateUser,
   updateGoal,
   updateWeight,
-  saveFoodIntake,
-  updateFoodIntake,
-  deleteFoodIntake,
   updateAvatar: ctrlWrapper(updateAvatar),
 };
