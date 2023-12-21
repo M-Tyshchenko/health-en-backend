@@ -1,5 +1,5 @@
-Welcome to the server part of the Health project.
+Welcome to the server part of the HealthyHub project.
 
 A web application built on the Node.js platform.
 
-Swagger documentation of Health project: https://health-en-app.onrender.com/api-docs/
+Swagger documentation of HealthyHub project: https://health-en-app.onrender.com/api-docs/
