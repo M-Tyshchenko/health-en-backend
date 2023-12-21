@@ -91,7 +91,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
+                  "$ref": "#/components/schemas/RegistrationResponse"
                 }
               }
             }
@@ -458,12 +458,12 @@
           },
           "goal": {
             "type": "string",
-            "enum": ["Lose fat", "Maintain", "Gain muscle"]
+            "enum": ["lose fat", "maintain", "gain muscle"]
           },
 
           "gender": {
             "type": "string",
-            "enum": ["Male", "Female"]
+            "enum": ["male", "female"]
           },
 
           "age": {
@@ -495,15 +495,97 @@
             "type": "string",
             "description": "User's token"
           },
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "John Johnson"
-          },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
+          "user": {
+            "type": "object",
+            "properties": {
+              "nutrients": {
+                "type": "object",
+                "properties": {
+                  "protein": {
+                    "type": "number",
+                    "description": "Daily goal's protein",
+                    "example": 600
+                  },
+                  "fat": {
+                    "type": "number",
+                    "description": "Daily goal's fat",
+                    "example": 500
+                  },
+                  "carbonohidrates": {
+                    "type": "number",
+                    "description": "Daily goal's carbonohidrates",
+                    "example": 1600
+                  }
+                }
+              },
+              "_id": {
+                "type": "string",
+                "description": "User's id",
+                "example": "873rgbfjcr7w94rwfbcs7w"
+              },
+              "name": {
+                "type": "string",
+                "description": "User's name",
+                "example": "John Johnson"
+              },
+              "email": {
+                "type": "string",
+                "description": "User's email",
+                "format": "email"
+              },
+              "password": {
+                "type": "string",
+                "description": "Hashed user's password"
+              },
+              "goal": {
+                "type": "string",
+                "description": "User's goal",
+                "example": "maintain"
+              },
+              "gender": {
+                "type": "string",
+                "description": "User's gender",
+                "example": "female"
+              },
+              "age": {
+                "type": "number",
+                "description": "User's age",
+                "example": 35
+              },
+              "height": {
+                "type": "number",
+                "description": "User's height in cm",
+                "example": 170
+              },
+              "weight": {
+                "type": "number",
+                "description": "User's weight in kg",
+                "example": 80
+              },
+              "activity": {
+                "type": "number",
+                "description": "User's activity",
+                "example": 1.2
+              },
+              "bmr": {
+                "type": "number",
+                "description": "User's daily goal of calories",
+                "example": 2600
+              },
+              "water": {
+                "type": "number",
+                "description": "User's daily goal of water in ml",
+                "example": 2000
+              },
+              "token": {
+                "type": "string",
+                "description": "User's token"
+              },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar link"
+              }
+            }
           }
         }
       },
@@ -522,22 +604,6 @@
             "type": "string",
             "description": "User's password",
             "example": "qwerty123"
-          }
-        }
-      },
-
-      "LoginResponse": {
-        "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "User's token"
-          },
-
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
           }
         }
       },
