@@ -348,6 +348,7 @@
         "tags": ["Stats"],
         "summary": "Reset water consumption value to 0 for current day",
         "parameters": [],
+        "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -421,6 +422,7 @@
         "tags": ["Stats"],
         "summary": "Delete food intake of specified type for current date",
         "parameters": [],
+        "security": [{ "Bearer": [] }],
         "requseBody": {
           "description": "reset waterIntake object",
           "required": true,
