@@ -14,12 +14,10 @@
       "name": "Auth",
       "description": "Authorization endpoints"
     },
-
     {
-      "name": "Avatar",
-      "description": "Update user's avatar endpoint"
+      "name": "User",
+      "description": "User endpoints"
     },
-
     {
       "name": "Recommended foods",
       "description": "Getting recommended foods list"
@@ -556,7 +554,7 @@
 
     "/api/user/avatars": {
       "post": {
-        "tags": ["Avatar"],
+        "tags": ["User"],
         "summary": "Updating user's avatar",
         "parameters": [],
         "security": [{ "Bearer": [] }],
