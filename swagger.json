@@ -197,7 +197,7 @@
       }
     },
 
-    "/api/user/update":{
+    "/api/user/update": {
       "put": {
         "tags": ["User"],
         "summary": "Update user info or contacts",
@@ -417,47 +417,6 @@
             "content": {}
           }
         }
-      },
-      "delete": {
-        "tags": ["Stats"],
-        "summary": "Delete food intake of specified type for current date",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requseBody": {
-          "description": "reset waterIntake object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetFoodIntakeRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successful operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ResetFoodIntakeResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized (email or password is wrong)",
-            "content": {}
-          },
-          "404": {
-            "description": "Not found. User has no such records that may be reset on that date",
-            "content": {}
-          },
-          "500": {
-            "description": "Server error",
-            "content": {}
-          }
-        }
       }
     },
 
@@ -506,6 +465,57 @@
           },
           "401": {
             "description": "Unauthorized (email or password is wrong)",
+            "content": {}
+          },
+          "500": {
+            "description": "Server error",
+            "content": {}
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Stats"],
+        "summary": "Delete food intake of specified type for current date",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "id of the food intake entry to delete",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "security": [{ "Bearer": [] }],
+        "requseBody": {
+          "description": "reset food-intake object",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetFoodIntakeRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetFoodIntakeResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized (email or password is wrong)",
+            "content": {}
+          },
+          "404": {
+            "description": "Not found",
             "content": {}
           },
           "500": {
@@ -897,7 +907,6 @@
         }
       },
 
-      
       "UpdateUser": {
         "type": "object",
         "required": ["name", "gender", "age", "height", "weight", "activity"],
@@ -908,7 +917,7 @@
             "example": "John Johnson",
             "required": true
           },
-          
+
           "gender": {
             "type": "string",
             "enum": ["Male", "Female"]
@@ -964,7 +973,7 @@
           "goal": {
             "type": "string",
             "enum": ["Lose fat", "Maintain", "Gain muscle"]
-          } 
+          }
         }
       },
 
@@ -991,7 +1000,7 @@
           "weight": {
             "type": "number",
             "example": 100
-          } 
+          }
         }
       },
 
@@ -1032,7 +1041,7 @@
           },
           "waterIntake": {
             "type": "number",
-            "description": "waterIntake value in mL after update",
+            "description": "water-intake value in mL after update",
             "example": 2000
           }
         }
@@ -1082,74 +1091,62 @@
       },
       "AddFoodIntakeResponse": {
         "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "description": "success message",
-            "example": "Food intake successfuly added"
-          },
-          "totalCalories": {
-            "type": "number",
-            "description": "number of totalCalories for today including recently added food intake",
-            "example": 2000
-          },
-          "result": {
-            "type": "array",
-            "items": {
-              "breakfast": {
-                "type": "array",
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "carbohidrates": {
-                      "type": "number",
-                      "description": "amount of carbohidrates in respective product",
-                      "example": 140
-                    },
-                    "protein": {
-                      "type": "number",
-                      "description": "amount of protein in respective product",
-                      "example": 30
-                    },
-                    "fat": {
-                      "type": "number",
-                      "description": "amount of fat in respective product",
-                      "example": 50
-                    },
-                    "dish": {
-                      "type": "string",
-                      "description": "name of the dish",
-                      "example": "Avocado"
-                    },
-                    "calories": {
-                      "type": "number",
-                      "description": "amount of calories in respective product",
-                      "example": 640
-                    },
-                    "_id": {
-                      "type": "string",
-                      "description": "food intake obect id"
-                    }
+        "result": {
+          "type": "object",
+          "properties": {
+            "breakfast": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "carbohidrates": {
+                    "type": "number",
+                    "description": "amount of carbohidrates in respective product",
+                    "example": 140
+                  },
+                  "protein": {
+                    "type": "number",
+                    "description": "amount of protein in respective product",
+                    "example": 30
+                  },
+                  "fat": {
+                    "type": "number",
+                    "description": "amount of fat in respective product",
+                    "example": 50
+                  },
+                  "dish": {
+                    "type": "string",
+                    "description": "name of the dish",
+                    "example": "Avocado"
+                  },
+                  "calories": {
+                    "type": "number",
+                    "description": "amount of calories in respective product",
+                    "example": 640
+                  },
+                  "_id": {
+                    "type": "string",
+                    "description": "food intake object id"
                   }
                 }
-              },
-              "dinner": {
-                "type": "array",
-                "items": {
-                  "type": "object"
-                }
-              },
-              "snack": {
-                "type": "array",
-                "items": {
-                  "type": "object"
-                }
-              },
-              "lunch": {
-                "type": "array",
-                "items": {
-                  "type": "object"
-                }
+              }
+            },
+            "dinner": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "snack": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "lunch": {
+              "type": "array",
+              "items": {
+                "type": "object"
               }
             }
           }
@@ -1157,7 +1154,14 @@
       },
       "UpdateFoodIntakeRequest": {
         "type": "object",
-        "required": ["carbohidrates", "protein", "fat", "dish", "type", "calories"],
+        "required": [
+          "carbohidrates",
+          "protein",
+          "fat",
+          "dish",
+          "type",
+          "calories"
+        ],
         "properties": {
           "carbohidrates": {
             "type": "number",
@@ -1199,7 +1203,7 @@
             "description": "success message",
             "example": "Food intake successfuly added"
           },
-           "totalCalories": {
+          "totalCalories": {
             "type": "number",
             "description": "number of totalCalories for today after recent update",
             "example": 2000
@@ -1252,12 +1256,12 @@
         }
       },
       "ResetFoodIntakeResponse": {
-"type": "object",
+        "type": "object",
         "properties": {
           "message": {
             "type": "string",
-            "description": "success message",
-            "example": "water intake stats has been successfuly reset"
+            "description": "success delete message",
+            "example": "Food intake with id 6584a667021e39df8aee3326 successfuly"
           },
           "type": {
             "type": "array"
@@ -1296,94 +1300,94 @@
         }
       },
       "getStatisticsResponse": {
-       "type": "object",
-       "properties": {
-        "data": {
-           "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "date": {
-              "type": "string",
-              "example": "2023-12-17"
-            },
-            "stats": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
               "type": "object",
               "properties": {
-                "foodIntake": {
+                "date": {
+                  "type": "string",
+                  "example": "2023-12-17"
+                },
+                "stats": {
                   "type": "object",
                   "properties": {
-                    "breakfast": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "carbohidrates": {
-                            "type": "number",
-                            "description": "respective nutrition element value",
-                            "example": 8.5
-                          },
-                          "protein": {
-                            "type": "number",
-                            "description": "respective nutrition element value",
-                            "example": 2
-                          },
-                          "fat": {
-                            "type": "number",
-                            "description": "respective nutrition element value",
-                            "example": 14.7
-                          },
-                          "dish": {
-                            "type": "string",
-                            "description": "name of the dish",
-                            "example": "Avocado"
-                          },
-                          "calories": {
-                  "type": "number",
-                  "description": "calories value",
-                  "example": 1000
-                },
-                          "_id": {
-                            "type": "string",
-                            "description": "id of food intake",
-                            "example": "657f48154407e426809fa649"
+                    "foodIntake": {
+                      "type": "object",
+                      "properties": {
+                        "breakfast": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "carbohidrates": {
+                                "type": "number",
+                                "description": "respective nutrition element value",
+                                "example": 8.5
+                              },
+                              "protein": {
+                                "type": "number",
+                                "description": "respective nutrition element value",
+                                "example": 2
+                              },
+                              "fat": {
+                                "type": "number",
+                                "description": "respective nutrition element value",
+                                "example": 14.7
+                              },
+                              "dish": {
+                                "type": "string",
+                                "description": "name of the dish",
+                                "example": "Avocado"
+                              },
+                              "calories": {
+                                "type": "number",
+                                "description": "calories value",
+                                "example": 1000
+                              },
+                              "_id": {
+                                "type": "string",
+                                "description": "id of food intake",
+                                "example": "657f48154407e426809fa649"
+                              }
+                            }
                           }
                         }
                       }
+                    },
+                    "waterIntake": {
+                      "type": "number",
+                      "description": "water-intake value in ml",
+                      "example": 1500
+                    },
+                    "totalCalories": {
+                      "type": "number",
+                      "description": "total calories value for specific date",
+                      "example": 1000
+                    },
+                    "weight": {
+                      "type": "number",
+                      "description": "user's weight as of certain date",
+                      "example": 1000
+                    },
+                    "_id": {
+                      "type": "string",
+                      "description": "id of stats object",
+                      "example": "657f46c67f454d34f0e89e30"
                     }
                   }
                 },
-                "waterIntake": {
-                  "type": "number",
-                  "description": "water-intake value in ml",
-                  "example": 1500
-                },
-                "totalCalories": {
-                  "type": "number",
-                  "description": "total calories value for specific date",
-                  "example": 1000
-                },
-                "weight": {
-                  "type": "number",
-                  "description": "user's weight as of certain date",
-                  "example": 1000
-                },
                 "_id": {
                   "type": "string",
-                  "description": "id of stats object",
-                  "example": "657f46c67f454d34f0e89e30"
+                  "description": "id of day object",
+                  "example": "657f46c67f454d34f0e89e2f"
                 }
               }
-            },
-            "_id": {
-              "type": "string",
-              "description": "id of day object",
-              "example": "657f46c67f454d34f0e89e2f"
             }
           }
         }
-        }
-       }
       },
 
       "getRecommendedFoodsResponse": {

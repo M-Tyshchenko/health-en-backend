@@ -3,7 +3,7 @@ const router = express.Router();
 
 const StatsController = require("../../controllers/stats");
 const DetailsController = require("../../controllers/userDetails");
-const { authenticate, validateBody, upload } = require("../../middlewares");
+const { authenticate, validateBody, upload, isValidId } = require("../../middlewares");
 const { schemas } = require("../schemas");
 
 router.get("/current", DetailsController.getCurrentUser);
@@ -29,13 +29,13 @@ router.post(
 );
 
 router.put(
-  "/food-intake/:id",
-  authenticate,
+  "/food-intake/:id",isValidId,
+  authenticate, 
   validateBody(schemas.updateFoodIntakeSchema),
   StatsController.updateFoodIntakeInfo
 );
 
-router.delete("/food-intake", authenticate, StatsController.resetFoodIntakeStats);
+router.delete("/food-intake/:id", isValidId, authenticate, StatsController.resetFoodIntakeStats);
 
 router.post(
   "/water-intake",
