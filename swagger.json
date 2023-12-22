@@ -307,6 +307,7 @@
         "tags": ["Stats", "Water-intake"],
         "summary": "Add water consumption info",
         "parameters": [],
+        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "addWaterIntake object",
           "required": true,
@@ -373,11 +374,13 @@
         }
       }
     },
+
     "/api/user/food-intake": {
       "post": {
         "tags": ["Stats", "Food-intake"],
         "summary": "Add food intake info",
         "parameters": [],
+        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "addFoodIntake object",
           "required": true,
@@ -455,6 +458,7 @@
         }
       }
     },
+
     "/api/user/food-intake/{id}": {
       "put": {
         "tags": ["Stats", "Food-intake"],
@@ -470,6 +474,7 @@
             }
           }
         ],
+        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "addFoodIntake object",
           "required": true,
@@ -514,6 +519,7 @@
         "tags": ["Statistics"],
         "summary": "Get user's stats within requested period, including calories and water consumtion, weight",
         "parameters": [],
+        "security": [{ "Bearer": [] }],
         "requestBody": {
           "description": "getStats object",
           "required": true,
