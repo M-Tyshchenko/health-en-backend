@@ -56,7 +56,7 @@ async function updateUser(req, res, next) {
     });
   }
 
-  const { name, email, gender, age, height, weight, activity } = req.body;
+  const { name, gender, age, height, weight, activity } = req.body;
 
   const bmr = calories(gender, age, height, weight, activity);
   const water = drink(weight, activity);
@@ -64,7 +64,6 @@ async function updateUser(req, res, next) {
 
   const newUser = {
     name,
-    email,
     gender,
     age,
     height,

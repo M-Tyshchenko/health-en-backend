@@ -726,7 +726,7 @@
       
       "UpdateUser": {
         "type": "object",
-        "required": ["name", "email", "gender", "age", "height", "weight", "activity"],
+        "required": ["name", "gender", "age", "height", "weight", "activity"],
         "properties": {
           "name": {
             "type": "string",
@@ -734,11 +734,7 @@
             "example": "John Johnson",
             "required": true
           },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
+          
           "gender": {
             "type": "string",
             "enum": ["Male", "Female"]
