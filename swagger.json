@@ -709,34 +709,10 @@
 
       "RegistrationResponse": {
         "type": "object",
-        "properties": {
-          "token": {
-            "type": "string",
-            "description": "User's token"
-          },
+        "properties": {         
           "user": {
             "type": "object",
             "properties": {
-              "nutrients": {
-                "type": "object",
-                "properties": {
-                  "protein": {
-                    "type": "number",
-                    "description": "Daily goal's protein",
-                    "example": 600
-                  },
-                  "fat": {
-                    "type": "number",
-                    "description": "Daily goal's fat",
-                    "example": 500
-                  },
-                  "carbonohidrates": {
-                    "type": "number",
-                    "description": "Daily goal's carbonohidrates",
-                    "example": 1600
-                  }
-                }
-              },
               "_id": {
                 "type": "string",
                 "description": "User's id",
@@ -751,10 +727,6 @@
                 "type": "string",
                 "description": "User's email",
                 "format": "email"
-              },
-              "password": {
-                "type": "string",
-                "description": "Hashed user's password"
               },
               "goal": {
                 "type": "string",
@@ -786,6 +758,10 @@
                 "description": "User's activity",
                 "example": 1.2
               },
+              "avatarURL": {
+                "type": "string",
+                "description": "User's avatar link"
+              },
               "bmr": {
                 "type": "number",
                 "description": "User's daily goal of calories",
@@ -796,13 +772,29 @@
                 "description": "User's daily goal of water in ml",
                 "example": 2000
               },
+              "nutrients": {
+                "type": "object",
+                "properties": {
+                  "protein": {
+                    "type": "number",
+                    "description": "Daily goal's protein",
+                    "example": 600
+                  },
+                  "fat": {
+                    "type": "number",
+                    "description": "Daily goal's fat",
+                    "example": 500
+                  },
+                  "carbonohidrates": {
+                    "type": "number",
+                    "description": "Daily goal's carbonohidrates",
+                    "example": 1600
+                  }
+                }
+              },
               "token": {
                 "type": "string",
                 "description": "User's token"
-              },
-              "avatarURL": {
-                "type": "string",
-                "description": "User's avatar link"
               }
             }
           }
