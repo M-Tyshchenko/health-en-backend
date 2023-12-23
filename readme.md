@@ -2,17 +2,20 @@
 
 ## Technologies used:
 
-Node.js
-Elasticemail-client
-Cloudinary
-Gravatar
-Joi
-Jsonwebtoken
-Cors
-Express
-Mongoose
-Multer
-Swagger-ui-express
+| Technology            |
+| --------------------- |
+| Node.js               |
+| Elasticemail-client   |
+| Cloudinary            |
+| Gravatar              |
+| Joi                   |
+| Jsonwebtoken          |
+| Cors                  |
+| Express               |
+| Mongoose              |
+| Multer                |
+| Swagger-ui-express    |
+| --------------------- |
 
 ## Backend team:
 
