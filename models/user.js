@@ -34,16 +34,22 @@ const userSchema = new mongoose.Schema(
     age: {
       type: Number,
       required: true,
+      min: 1,
+      max: 150,
     },
 
     height: {
       type: Number,
       required: true,
+      min: 50,
+      max: 300,
     },
 
     weight: {
       type: Number,
       required: true,
+      min: 5,
+      max: 400,
     },
 
     activity: {
