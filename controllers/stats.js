@@ -340,20 +340,26 @@ const getTotalConsumptionStats = async (req, res) => {
   }
   const result = await Stats.find({
     owner,
-    "dates.date": {
-      $gte: validFromDate,
-      $lte: validToDate,
+    dates: {
+      $elemMatch: {
+        date: {
+          $gte: validFromDate,
+          $lte: validToDate,
+        },
+      },
     },
   });
 
   if (!result.length) {
     res
       .status(200)
-      .json({ message: "No records found within the given period" });
+      .json({ message: "No records found within the given period", stats: null });
     return;
   }
 
-  res.status(200).json({ data: result[0].dates });
+  const transfomedResult = [...result[0].dates].filter(day => day.date >= dateFrom && day.date <= dateTo);
+
+  res.status(200).json({ data: transfomedResult });
 };
 
 module.exports = {
