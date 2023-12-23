@@ -41,7 +41,7 @@ async function register(req, res) {
     });
   }
 
-  const { email, password, goal, gender, age, height, weight, activity } =
+  const { name, email, password, goal, gender, age, height, weight, activity } =
     req.body;
   const hashPassword = await bcrypt.hash(password, 10);
 
@@ -68,10 +68,24 @@ async function register(req, res) {
   const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "1w" });
 
   await User.findByIdAndUpdate(newUser._id, { token });
-  const user = await User.findOne(newUser._id).exec();
+
   res.status(201).json({
-    token,
-    user,
+    user: {
+      _id: newUser._id,
+      name,
+      email,
+      goal,
+      gender,
+      age,
+      height,
+      weight,
+      activity,
+      avatarURL,
+      bmr,
+      water,
+      nutrients,
+      token,
+    },
   });
 }
 
@@ -106,8 +120,22 @@ async function login(req, res) {
   jwt.verify(token, SECRET_KEY);
 
   res.json({
-    token,
-    user,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email,
+      goal: user.goal,
+      gender: user.gender,
+      age: user.age,
+      height: user.height,
+      weight: user.weight,
+      activity: user.activity,
+      avatarURL: user.avatarURL,
+      bmr: user.bmr,
+      water: user.water,
+      nutrients: user.nutrients,
+      token,
+    },
   });
 }
 
