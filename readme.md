@@ -15,7 +15,7 @@
 | Mongoose              |
 | Multer                |
 | Swagger-ui-express    |
-| --------------------- |
+
 
 ## Backend team:
 
