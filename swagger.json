@@ -1,13 +1,15 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "version": "2.0.0",
-    "title": "Swagger test",
-    "description": "Showing off swagger-ui-express"
+    "version": "2.0.1",
+    "title": "healthy-hub-project-backend"
   },
   "consumes": ["application/json"],
   "produces": ["application/json"],
-  "servers": [{ "url": "https://health-en-app.onrender.com/" }],
+  "servers": [
+    { "url": "https://health-en-app.onrender.com" },
+    { "url": "http://localhost:3000" }
+  ],
 
   "tags": [
     {
@@ -530,25 +532,28 @@
       "get": {
         "tags": ["Statistics"],
         "summary": "Get user's stats within requested period, including calories and water consumtion, weight",
-        "parameters": [{
-          "name": "dateFrom",
-          "in": "query",
-          "required": true,
-          "description": "date string in arbitrary format (toISOString is preferable)",
-          "schema": {
-            "type": "string",
-            "example": "2023-12-15"
+        "parameters": [
+          {
+            "name": "dateFrom",
+            "in": "query",
+            "required": true,
+            "description": "date string in arbitrary format (toISOString is preferable)",
+            "schema": {
+              "type": "string",
+              "example": "2023-12-15"
+            }
+          },
+          {
+            "name": "dateTo",
+            "in": "query",
+            "required": true,
+            "description": "date string in arbitrary format (toISOString is preferable)",
+            "schema": {
+              "type": "string",
+              "example": "2023-12-17T12:23:43.916Z"
+            }
           }
-        }, {
-          "name": "dateTo",
-          "in": "query",
-          "required": true,
-          "description": "date string in arbitrary format (toISOString is preferable)",
-          "schema": {
-            "type": "string",
-            "example": "2023-12-17T12:23:43.916Z"
-          }
-        }],
+        ],
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
@@ -1450,14 +1455,13 @@
             }
           }
         }
-      },
-
-      "securitySchemes": {
-        "Bearer": {
-          "type": "http",
-          "scheme": "bearer",
-          "bearerFormat": "JWT"
-        }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }
