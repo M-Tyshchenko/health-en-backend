@@ -328,7 +328,7 @@ const resetWaterIntakeStats = async (req, res) => {
 
 const getTotalConsumptionStats = async (req, res) => {
   const { _id: owner } = req.user;
-  const { dateFrom, dateTo } = req.body;
+  const { dateFrom, dateTo } = req.query;
   const validFromDate = parseAndTransformDate(
     dateFrom,
     createFormattedDateString

@@ -53,7 +53,6 @@ router.delete(
 router.get(
   "/statistics",
   authenticate,
-  validateBody(schemas.getStatsSchema),
   StatsController.getTotalConsumptionStats
 );
 
