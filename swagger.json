@@ -552,11 +552,11 @@
         "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Multiple Response Types",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/getStatisticsResponse"
+                  "$ref": "#/components/schemas/getStatisticsResponses"
                 }
               }
             }
@@ -1290,97 +1290,114 @@
           }
         }
       },
-      "getStatisticsResponse": {
+      "getStatisticsResponses": {
         "type": "object",
         "properties": {
-          "data": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "date": {
-                  "type": "string",
-                  "example": "2023-12-17"
-                },
-                "stats": {
+          "successResponse": {
+            "properties": {
+              "data": {
+                "type": "array",
+                "items": {
                   "type": "object",
                   "properties": {
-                    "foodIntake": {
+                    "date": {
+                      "type": "string",
+                      "example": "2023-12-17"
+                    },
+                    "stats": {
                       "type": "object",
                       "properties": {
-                        "breakfast": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "carbohidrates": {
-                                "type": "number",
-                                "description": "respective nutrition element value",
-                                "example": 8.5
-                              },
-                              "protein": {
-                                "type": "number",
-                                "description": "respective nutrition element value",
-                                "example": 2
-                              },
-                              "fat": {
-                                "type": "number",
-                                "description": "respective nutrition element value",
-                                "example": 14.7
-                              },
-                              "dish": {
-                                "type": "string",
-                                "description": "name of the dish",
-                                "example": "Avocado"
-                              },
-                              "calories": {
-                                "type": "number",
-                                "description": "calories value",
-                                "example": 1000
-                              },
-                              "_id": {
-                                "type": "string",
-                                "description": "id of food intake",
-                                "example": "657f48154407e426809fa649"
+                        "foodIntake": {
+                          "type": "object",
+                          "properties": {
+                            "breakfast": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "carbohidrates": {
+                                    "type": "number",
+                                    "description": "respective nutrition element value",
+                                    "example": 8.5
+                                  },
+                                  "protein": {
+                                    "type": "number",
+                                    "description": "respective nutrition element value",
+                                    "example": 2
+                                  },
+                                  "fat": {
+                                    "type": "number",
+                                    "description": "respective nutrition element value",
+                                    "example": 14.7
+                                  },
+                                  "dish": {
+                                    "type": "string",
+                                    "description": "name of the dish",
+                                    "example": "Avocado"
+                                  },
+                                  "calories": {
+                                    "type": "number",
+                                    "description": "calories value",
+                                    "example": 1000
+                                  },
+                                  "_id": {
+                                    "type": "string",
+                                    "description": "id of food intake",
+                                    "example": "657f48154407e426809fa649"
+                                  }
+                                }
                               }
                             }
                           }
+                        },
+                        "waterIntake": {
+                          "type": "number",
+                          "description": "water-intake value in ml",
+                          "example": 1500
+                        },
+                        "totalCalories": {
+                          "type": "number",
+                          "description": "total calories value for specific date",
+                          "example": 1000
+                        },
+                        "weight": {
+                          "type": "number",
+                          "description": "user's weight as of certain date",
+                          "example": 1000
+                        },
+                        "_id": {
+                          "type": "string",
+                          "description": "id of stats object",
+                          "example": "657f46c67f454d34f0e89e30"
                         }
                       }
                     },
-                    "waterIntake": {
-                      "type": "number",
-                      "description": "water-intake value in ml",
-                      "example": 1500
-                    },
-                    "totalCalories": {
-                      "type": "number",
-                      "description": "total calories value for specific date",
-                      "example": 1000
-                    },
-                    "weight": {
-                      "type": "number",
-                      "description": "user's weight as of certain date",
-                      "example": 1000
-                    },
                     "_id": {
                       "type": "string",
-                      "description": "id of stats object",
-                      "example": "657f46c67f454d34f0e89e30"
+                      "description": "id of day object",
+                      "example": "657f46c67f454d34f0e89e2f"
                     }
                   }
-                },
-                "_id": {
-                  "type": "string",
-                  "description": "id of day object",
-                  "example": "657f46c67f454d34f0e89e2f"
+                }
+              }
+            }
+          },
+          "noDataResponse": {
+            "properties": {
+              "data": {
+                "type": "object",
+                "properties": {
+                  "message": {
+                    "type": "string",
+                    "example": "No records found within the given period"
+                  },
+                  "stats": null
                 }
               }
             }
           }
         }
       },
-
       "getRecommendedFoodsResponse": {
         "type": "array",
         "items": {
