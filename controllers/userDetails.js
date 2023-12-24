@@ -6,8 +6,6 @@ const {
   generateDailyConsumptionEntry,
   createNewStatsEntry,
   createFormattedDateString,
-  ctrlWrapper,
-  HTTPError,
 } = require("../helpers");
 const { Stats } = require("../models");
 
@@ -212,22 +210,9 @@ async function updateWeight(req, res, next) {
   }
 }
 
-async function updateAvatar(req, res) {
-  const { _id } = req.user;
-
-  if (req.file === undefined) {
-    throw HTTPError(400, "Image is undefined");
-  }
-  const avatarURL = req.file.path;
-
-  await User.findByIdAndUpdate(_id, { avatarURL }, { new: true }).exec();
-  res.status(200).json({ avatarURL, message: "User's avatar updated" });
-}
-
 module.exports = {
   getCurrentUser,
   updateUser,
   updateGoal,
   updateWeight,
-  updateAvatar: ctrlWrapper(updateAvatar),
 };
