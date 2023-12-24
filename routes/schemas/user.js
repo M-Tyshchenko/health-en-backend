@@ -2,16 +2,16 @@ const joi = require("joi");
 const { genders } = require("../../helpers/constants");
 
 const addWaterIntakeSchema = joi.object({
-  waterIntake: joi.number().required().max(7000).positive(),
+  waterIntake: joi.number().required().max(7000).positive().min(0),
 });
 
 const foodIntakeSchema = joi.object({
-  carbohidrates: joi.number().required(),
-  protein: joi.number().required(),
-  fat: joi.number().required(),
+  carbohidrates: joi.number().required().min(0),
+  protein: joi.number().required().min(0),
+  fat: joi.number().required().min(0),
   dish: joi.string().required(),
   type: joi.string().valid("breakfast", "lunch", "dinner", "snack"),
-  calories: joi.number().required(),
+  calories: joi.number().required().min(0),
 });
 
 const resetFoodIntakeSchema = joi.object({

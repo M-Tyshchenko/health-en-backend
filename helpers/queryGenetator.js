@@ -19,14 +19,14 @@ const createFirstFoodUpdateQuery = (modelObj) => {
   };
 };
 // creates query finding desired mealIntake
-const createFoodIntakeQuery = (
+const createFoodIntakeQuery = ({
   type,
   mealEntry,
   calories,
   carbohidrates,
   protein,
-  fat
-) => {
+  fat,
+}) => {
   const query = {
     $push: { [`dates.$.stats.foodIntake.${type}`]: mealEntry },
     $inc: {
@@ -66,8 +66,23 @@ const createFoodIntakeSecondUpdateQuery = (params) => {
   };
 };
 
+const createFoodIntakeQueryIfNotPresent = (params) => {
+  const { type, calories, carbohidrates, protein, fat, mealEntry } = params;
+
+  return {
+    [`dates.$.stats.foodIntake.${type}`]: mealEntry,
+    $inc: {
+      "dates.$.stats.totalCalories": calories,
+      "dates.$.stats.totalCarbohidrates": carbohidrates,
+      "dates.$.stats.totalProtein": protein,
+      "dates.$.stats.totalFat": fat,
+    },
+  };
+};
+
 module.exports = {
   createFirstFoodUpdateQuery,
   createFoodIntakeQuery,
   createFoodIntakeSecondUpdateQuery,
+  createFoodIntakeQueryIfNotPresent,
 };
