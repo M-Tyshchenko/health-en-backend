@@ -23,14 +23,11 @@ const addWaterIntakeStats = async (req, res) => {
   const isOwnerPresent = await Stats.findOne({ owner });
 
   if (!isOwnerPresent) {
-    const dailyEntry = generateDailyConsumptionEntry(
-      {
-        weight,
-        waterIntake,
-        date,
-      },
-      generateMealEntry
-    );
+    const dailyEntry = generateDailyConsumptionEntry(generateMealEntry, {
+      weight,
+      waterIntake,
+      date,
+    });
     const newEntry = createNewStatsEntry(dailyEntry, owner);
     const result = await Stats.create(newEntry);
 
@@ -44,10 +41,11 @@ const addWaterIntakeStats = async (req, res) => {
   const isDailyCreated = await Stats.findOne({ owner, "dates.date": date });
 
   if (!isDailyCreated) {
-    const dailyEntry = generateDailyConsumptionEntry(
-      {         weight, waterIntake, date },
-      generateMealEntry
-    );
+    const dailyEntry = generateDailyConsumptionEntry(generateMealEntry, {
+      weight,
+      waterIntake,
+      date,
+    });
     const result = await Stats.findOneAndUpdate(
       { owner },
       { $push: { dates: dailyEntry } },
@@ -80,7 +78,7 @@ const addFoodIntakeStats = async (req, res) => {
 
   if (!isOwnerPresent) {
     const dailyEntry = generateDailyConsumptionEntry(generateMealEntry, {
-       weight,
+      weight,
       ...req.body,
       date,
     });
