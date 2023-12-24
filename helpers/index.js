@@ -4,12 +4,16 @@ const { HTTPError } = require("../helpers/HTTPError");
 const { calories, drink, elements } = require("../helpers/calculations");
 const {
   generateDailyConsumptionEntry,
-  createNewStatsEntry, generateMealEntry, createFoodIntakeQuery, 
+  createNewStatsEntry, generateMealEntry,
 } = require("../helpers/statsEntryCreator");
+
+const {compileFoodIntakeSuccesResponse} = require("../helpers/responseComplier")
 const {
   createFormattedDateString,
   parseAndTransformDate,
 } = require("../helpers/dateFormatter");
+
+const {createFirstFoodUpdateQuery, createFoodIntakeQuery, createFoodIntakeSecondUpdateQuery} = require("../helpers/queryGenetator")
 module.exports = {
   handleMongooseError,
   ctrlWrapper,
@@ -20,6 +24,6 @@ module.exports = {
   generateDailyConsumptionEntry,
   createNewStatsEntry,
   createFormattedDateString,
-  parseAndTransformDate, generateMealEntry, createFoodIntakeQuery, 
-  
+  parseAndTransformDate, generateMealEntry,
+  compileFoodIntakeSuccesResponse, createFirstFoodUpdateQuery, createFoodIntakeQuery, createFoodIntakeSecondUpdateQuery
 };

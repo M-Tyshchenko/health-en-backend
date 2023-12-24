@@ -4,15 +4,7 @@ const generateMealEntry = ({ carbohidrates, protein, fat, dish, calories }) => {
 
   return x;
 };
-// creates query finding desired mealIntake
-const createFoodIntakeQuery = (type, mealEntry, calories) => {
-  const query = {
-    $push: { [`dates.$.stats.foodIntake.${type}`]: mealEntry }, 
-    $inc: { "dates.$.stats.totalCalories": calories }
-  };
 
-  return query;
-};
 
 // creates instance matching Stats dailySchema requirments. Function recieve params incoming from request.body and request.user
 // properties and returns an object that can be pushed into [instance].dates array and assigned ad [date].stats property (stats collection)
@@ -28,9 +20,18 @@ const generateDailyConsumptionEntry = (params, mealUnitGenerator) => {
     weight = 0,
     date,
     totalCalories = calories || 0,
+    totalCarbohidrates = carbohidrates || 0,
+    totalProtein = protein || 0,
+    totalFat = fat || 0,
   } = params;
 
-  const mealObject = mealUnitGenerator({ carbohidrates, protein, fat, dish, calories });
+  const mealObject = mealUnitGenerator({
+    carbohidrates,
+    protein,
+    fat,
+    dish,
+    calories,
+  });
 
   const x = {
     date,
@@ -40,6 +41,9 @@ const generateDailyConsumptionEntry = (params, mealUnitGenerator) => {
         [type]: [mealObject],
       },
       totalCalories,
+      totalCarbohidrates,
+      totalProtein,
+      totalFat,
       weight,
     },
   };
@@ -61,5 +65,5 @@ module.exports = {
   generateDailyConsumptionEntry,
   createNewStatsEntry,
   generateMealEntry,
-  createFoodIntakeQuery,
+
 };
