@@ -199,7 +199,7 @@
               }
             }
           },
-                    "401": {
+          "401": {
             "description": "Not authorized",
             "content": {}
           }
@@ -238,7 +238,7 @@
             "description": "Bad request (invalid request body)",
             "content": {}
           },
-                    "401": {
+          "401": {
             "description": "Not authorized",
             "content": {}
           }
@@ -277,7 +277,7 @@
             "description": "Bad request (invalid request body)",
             "content": {}
           },
-                    "401": {
+          "401": {
             "description": "Not authorized",
             "content": {}
           }
@@ -316,7 +316,7 @@
             "description": "Bad request (invalid request body)",
             "content": {}
           },
-                    "401": {
+          "401": {
             "description": "Not authorized",
             "content": {}
           }
@@ -634,7 +634,7 @@
             "description": "Bad request (image is undefined)",
             "content": {}
           },
-                    "401": {
+          "401": {
             "description": "Not authorized",
             "content": {}
           }
@@ -893,7 +893,7 @@
           }
         }
       },
-     
+
       "UpdateUserGoal": {
         "type": "object",
         "required": ["goal"],
@@ -1019,7 +1019,7 @@
       },
       "AddFoodIntakeResponse": {
         "type": "object",
-        "result": {
+        "foodIntake": {
           "type": "object",
           "properties": {
             "breakfast": {
@@ -1052,6 +1052,11 @@
                     "description": "amount of calories in respective product",
                     "example": 640
                   },
+                  "totalCalories": {
+                    "type": "number",
+                    "description": "amount of total calories consumption value after update",
+                    "example": 640
+                  },
                   "_id": {
                     "type": "string",
                     "description": "food intake object id"
@@ -1078,6 +1083,25 @@
               }
             }
           }
+        },
+        "message": {
+          "type": "string",
+          "example": "Food intake successfuly added"
+        },
+        "totalCarbohidrates": {
+          "type": "number",
+          "description": "amount of total carbohidrates consumption value after update",
+          "example": 640
+        },
+        "totalProtein": {
+          "type": "number",
+          "description": "amount of total protein consumption value after update",
+          "example": 640
+        },
+        "totalFat": {
+          "type": "number",
+          "description": "amount of total fat consumption value after update",
+          "example": 640
         }
       },
       "UpdateFoodIntakeRequest": {
@@ -1129,14 +1153,29 @@
           "message": {
             "type": "string",
             "description": "success message",
-            "example": "Food intake successfuly added"
+            "example": "Update successfu"
           },
           "totalCalories": {
             "type": "number",
             "description": "number of totalCalories for today after recent update",
             "example": 2000
           },
-          "data": {
+                  "totalCarbohidrates": {
+          "type": "number",
+          "description": "amount of total carbohidrates consumption value after update",
+          "example": 640
+        },
+        "totalProtein": {
+          "type": "number",
+          "description": "amount of total protein consumption value after update",
+          "example": 640
+        },
+        "totalFat": {
+          "type": "number",
+          "description": "amount of total fat consumption value after update",
+          "example": 640
+        },
+          "foodIntake": {
             "type": "object",
             "properties": {
               "carbohidrates": {
@@ -1189,7 +1228,7 @@
           "message": {
             "type": "string",
             "description": "success delete message",
-            "example": "Food intake with id 6584a667021e39df8aee3326 successfuly"
+            "example": "Food intake with id 6584a667021e39df8aee3326 successfuly deleted"
           },
           "type": {
             "type": "array"

@@ -50,6 +50,21 @@ const dailySchema = new Schema(
       default: 0,
       required: true,
     },
+    totalCarbohidrates: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    totalProtein: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    totalFat: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
     weight: {
       type: Number,
       default: 0,
