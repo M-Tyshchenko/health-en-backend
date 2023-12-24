@@ -33,15 +33,42 @@ const addWeightStats = async (req, weight) => {
   await Stats.findOneAndUpdate({ owner }, { dates: dailyEntry }, { new: true });
 };
 
-async function getCurrentUser(req, res, next) {
-  const id = req.user._id;
-  try {
-    const user = await User.findById(id).exec();
+async function getCurrentUser(req, res) {
+  const {
+    _id,
+    name,
+    email,
+    goal,
+    gender,
+    age,
+    height,
+    weight,
+    activity,
+    avatarURL,
+    bmr,
+    water,
+    nutrients,
+    token,
+  } = req.user;
 
-    res.status(200).send(user);
-  } catch (err) {
-    next(err);
-  }
+  res.status(200).json({
+    user: {
+      _id,
+      name,
+      email,
+      goal,
+      gender,
+      age,
+      height,
+      weight,
+      activity,
+      avatarURL,
+      bmr,
+      water,
+      nutrients,
+      token,
+    },
+  });
 }
 
 async function updateUser(req, res, next) {
@@ -84,7 +111,22 @@ async function updateUser(req, res, next) {
     });
 
     res.status(200).json({
-      user: { name: updatedUser.name, email: updatedUser.email },
+      user: {
+        _id: updatedUser._id,
+        name,
+        email: updatedUser.email,
+        goal,
+        gender,
+        age,
+        height,
+        weight,
+        activity,
+        avatarURL: updatedUser.avatarURL,
+        bmr,
+        water,
+        nutrients,
+        token: updatedUser.token,
+      },
     });
   } catch (err) {
     next(err);
