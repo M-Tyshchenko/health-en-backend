@@ -979,92 +979,92 @@
       },
       "AddFoodIntakeResponse": {
         "type": "object",
-       "properties": {
-         "foodIntake": {
-          "type": "object",
-          "properties": {
-            "breakfast": {
-              "type": "array",
-              "items": {
-                "type": "object",
-                "properties": {
-                  "carbohidrates": {
-                    "type": "number",
-                    "description": "amount of carbohidrates in respective product",
-                    "example": 140
-                  },
-                  "protein": {
-                    "type": "number",
-                    "description": "amount of protein in respective product",
-                    "example": 30
-                  },
-                  "fat": {
-                    "type": "number",
-                    "description": "amount of fat in respective product",
-                    "example": 50
-                  },
-                  "dish": {
-                    "type": "string",
-                    "description": "name of the dish",
-                    "example": "Avocado"
-                  },
-                  "calories": {
-                    "type": "number",
-                    "description": "amount of calories in respective product",
-                    "example": 640
-                  },
-                  "totalCalories": {
-                    "type": "number",
-                    "description": "amount of total calories consumption value after update",
-                    "example": 640
-                  },
-                  "_id": {
-                    "type": "string",
-                    "description": "food intake object id"
+        "properties": {
+          "foodIntake": {
+            "type": "object",
+            "properties": {
+              "breakfast": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "carbohidrates": {
+                      "type": "number",
+                      "description": "amount of carbohidrates in respective product",
+                      "example": 140
+                    },
+                    "protein": {
+                      "type": "number",
+                      "description": "amount of protein in respective product",
+                      "example": 30
+                    },
+                    "fat": {
+                      "type": "number",
+                      "description": "amount of fat in respective product",
+                      "example": 50
+                    },
+                    "dish": {
+                      "type": "string",
+                      "description": "name of the dish",
+                      "example": "Avocado"
+                    },
+                    "calories": {
+                      "type": "number",
+                      "description": "amount of calories in respective product",
+                      "example": 640
+                    },
+                    "totalCalories": {
+                      "type": "number",
+                      "description": "amount of total calories consumption value after update",
+                      "example": 640
+                    },
+                    "_id": {
+                      "type": "string",
+                      "description": "food intake object id"
+                    }
                   }
                 }
-              }
-            },
-            "dinner": {
-              "type": "array",
-              "items": {
-                "type": "object"
-              }
-            },
-            "snack": {
-              "type": "array",
-              "items": {
-                "type": "object"
-              }
-            },
-            "lunch": {
-              "type": "array",
-              "items": {
-                "type": "object"
+              },
+              "dinner": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "snack": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "lunch": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
               }
             }
+          },
+          "message": {
+            "type": "string",
+            "example": "Food intake successfuly added"
+          },
+          "totalCarbohidrates": {
+            "type": "number",
+            "description": "amount of total carbohidrates consumption value after update",
+            "example": 640
+          },
+          "totalProtein": {
+            "type": "number",
+            "description": "amount of total protein consumption value after update",
+            "example": 640
+          },
+          "totalFat": {
+            "type": "number",
+            "description": "amount of total fat consumption value after update",
+            "example": 640
           }
-        },
-        "message": {
-          "type": "string",
-          "example": "Food intake successfuly added"
-        },
-        "totalCarbohidrates": {
-          "type": "number",
-          "description": "amount of total carbohidrates consumption value after update",
-          "example": 640
-        },
-        "totalProtein": {
-          "type": "number",
-          "description": "amount of total protein consumption value after update",
-          "example": 640
-        },
-        "totalFat": {
-          "type": "number",
-          "description": "amount of total fat consumption value after update",
-          "example": 640
         }
-       }
       },
       "UpdateFoodIntakeRequest": {
         "type": "object",
@@ -1281,6 +1281,21 @@
                           "type": "number",
                           "description": "total calories value for specific date",
                           "example": 1000
+                        },
+                        "totalCarbohidrates": {
+                          "type": "number",
+                          "description": "amount of total carbohidrates consumption value after update",
+                          "example": 640
+                        },
+                        "totalProtein": {
+                          "type": "number",
+                          "description": "amount of total protein consumption value after update",
+                          "example": 640
+                        },
+                        "totalFat": {
+                          "type": "number",
+                          "description": "amount of total fat consumption value after update",
+                          "example": 640
                         },
                         "weight": {
                           "type": "number",
