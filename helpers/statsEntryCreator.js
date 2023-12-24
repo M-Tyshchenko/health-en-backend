@@ -5,25 +5,27 @@ const generateMealEntry = ({ carbohidrates, protein, fat, dish, calories }) => {
   return x;
 };
 
-
 // creates instance matching Stats dailySchema requirments. Function recieve params incoming from request.body and request.user
 // properties and returns an object that can be pushed into [instance].dates array and assigned ad [date].stats property (stats collection)
-const generateDailyConsumptionEntry = (params, mealUnitGenerator) => {
-  const {
-    waterIntake = 0,
-    carbohidrates = 0,
-    protein = 0,
-    fat = 0,
-    dish = null,
-    type = "breakfast",
-    calories = 0,
-    weight = 0,
-    date,
-    totalCalories = calories || 0,
-    totalCarbohidrates = carbohidrates || 0,
-    totalProtein = protein || 0,
-    totalFat = fat || 0,
-  } = params;
+const generateDailyConsumptionEntry = (mealUnitGenerator, ...params) => {
+  console.log(params);
+  const [
+    {
+      waterIntake = 0,
+      carbohidrates = 0,
+      protein = 0,
+      fat = 0,
+      dish = null,
+      type = "breakfast",
+      calories = 0,
+      weight = 0,
+      date,
+      totalCalories = calories || 0,
+      totalCarbohidrates = carbohidrates || 0,
+      totalProtein = protein || 0,
+      totalFat = fat || 0,
+    },
+  ] = params;
 
   const mealObject = mealUnitGenerator({
     carbohidrates,
@@ -65,5 +67,4 @@ module.exports = {
   generateDailyConsumptionEntry,
   createNewStatsEntry,
   generateMealEntry,
-
 };

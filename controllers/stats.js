@@ -6,10 +6,13 @@ const {
   createFormattedDateString,
   parseAndTransformDate,
   generateMealEntry,
-  compileFoodIntakeSuccesResponse, createFoodIntakeQuery, createFirstFoodUpdateQuery, createFoodIntakeSecondUpdateQuery
+  compileFoodIntakeSuccesResponse,
+  createFoodIntakeQuery,
+  createFirstFoodUpdateQuery,
+  createFoodIntakeSecondUpdateQuery,
+  createFoodIntakeQueryIfNotPresent,
 } = require("../helpers");
 const { Stats } = require("../models");
-
 
 const addWaterIntakeStats = async (req, res) => {
   const { _id: owner, weight } = req.user;
@@ -42,7 +45,7 @@ const addWaterIntakeStats = async (req, res) => {
 
   if (!isDailyCreated) {
     const dailyEntry = generateDailyConsumptionEntry(
-      { waterIntake, date },
+      {         weight, waterIntake, date },
       generateMealEntry
     );
     const result = await Stats.findOneAndUpdate(
@@ -67,33 +70,20 @@ const addWaterIntakeStats = async (req, res) => {
 };
 
 const addFoodIntakeStats = async (req, res) => {
-  const { _id: owner } = req.user;
+  const { _id: owner, weight } = req.user;
 
-  const {
-    carbohidrates = null,
-    protein = null,
-    fat = null,
-    dish = null,
-    type = null,
-    calories = null,
-  } = req.body;
+  const { type = null } = req.body;
 
   const date = createFormattedDateString();
+
   const isOwnerPresent = await Stats.findOne({ owner });
 
   if (!isOwnerPresent) {
-    const dailyEntry = generateDailyConsumptionEntry(
-      {
-        carbohidrates,
-        protein,
-        fat,
-        date,
-        type,
-        dish,
-        calories,
-      },
-      generateMealEntry
-    );
+    const dailyEntry = generateDailyConsumptionEntry(generateMealEntry, {
+       weight,
+      ...req.body,
+      date,
+    });
 
     const newEntry = createNewStatsEntry(dailyEntry, owner);
     const result = await Stats.create(newEntry);
@@ -103,17 +93,12 @@ const addFoodIntakeStats = async (req, res) => {
   const isDailyCreated = await Stats.findOne({ owner, "dates.date": date });
 
   if (!isDailyCreated) {
-    const dailyEntry = generateDailyConsumptionEntry(
-      {
-        carbohidrates,
-        protein,
-        fat,
-        dish,
-        date,
-        calories,
-      },
-      generateMealEntry
-    );
+    const dailyEntry = generateDailyConsumptionEntry(generateMealEntry, {
+      weight,
+      ...req.body,
+      date,
+    });
+
     const result = await Stats.findOneAndUpdate(
       { owner },
       { $push: { dates: dailyEntry } },
@@ -130,46 +115,22 @@ const addFoodIntakeStats = async (req, res) => {
       .length;
 
   if (!isFoodIntakePresent) {
-    const mealEntry = generateMealEntry({
-      carbohidrates,
-      protein,
-      fat,
-      dish,
-      calories,
+    const mealEntry = generateMealEntry(req.body);
+    const updateQuery = createFoodIntakeQueryIfNotPresent({
+      ...req.body,
+      mealEntry,
     });
-    const query = `dates.$.stats.foodIntake.${type}`;
-const result = await Stats.findOneAndUpdate(
+    const result = await Stats.findOneAndUpdate(
       { owner, "dates.date": date },
-      {
-        [query]: mealEntry,
-        $inc: {
-          "dates.$.stats.totalCalories": calories,
-          "dates.$.stats.totalCarbohidrates": carbohidrates,
-          "dates.$.stats.totalProtein": protein,
-          "dates.$.stats.totalFat": fat,
-        },
-      },
+      updateQuery,
       { new: true, runValidators: true }
     );
-res.status(200).json(compileFoodIntakeSuccesResponse(result, "create"));
+    res.status(200).json(compileFoodIntakeSuccesResponse(result, "create"));
     return;
   }
-  const mealEntry = generateMealEntry({
-    carbohidrates,
-    protein,
-    fat,
-    dish,
-    calories,
-  });
+  const mealEntry = generateMealEntry(req.body);
 
- const query = createFoodIntakeQuery(
-    type,
-    mealEntry,
-    calories,
-    carbohidrates,
-    protein,
-    fat
-  );
+  const query = createFoodIntakeQuery({ ...req.body, mealEntry });
 
   const result = await Stats.findOneAndUpdate(
     { owner, "dates.date": date },
@@ -177,7 +138,7 @@ res.status(200).json(compileFoodIntakeSuccesResponse(result, "create"));
     { new: true, runValidators: true }
   );
 
-res.status(200).json(compileFoodIntakeSuccesResponse(result, "create"));
+  res.status(200).json(compileFoodIntakeSuccesResponse(result, "create"));
 };
 
 const updateFoodIntakeInfo = async (req, res) => {
@@ -191,10 +152,9 @@ const updateFoodIntakeInfo = async (req, res) => {
     .flatMap((d) => d.stats.foodIntake[type])
     .filter((u) => u._id.toString() === id);
 
-
   const firstUpdateQuery = createFirstFoodUpdateQuery(x[0]._doc);
 
-await Stats.findOneAndUpdate(
+  await Stats.findOneAndUpdate(
     { owner, [`dates.stats.foodIntake.${type}._id`]: id },
     firstUpdateQuery,
     {
@@ -204,7 +164,7 @@ await Stats.findOneAndUpdate(
   );
 
   const updateQuery = createFoodIntakeSecondUpdateQuery(req.body);
- 
+
   const arrayFilters = [
     { [`dateElement.stats.foodIntake.${type}._id`]: id },
     { "foodIntakeElement._id": id },
@@ -237,7 +197,9 @@ await Stats.findOneAndUpdate(
   const transfomedResult = result.dates[0].stats.foodIntake[type].filter(
     (unit) => unit._id.toString() === id
   );
-   res.status(200).json(compileFoodIntakeSuccesResponse(result, "update", transfomedResult))
+  res
+    .status(200)
+    .json(compileFoodIntakeSuccesResponse(result, "update", transfomedResult));
 };
 
 const resetFoodIntakeStats = async (req, res) => {
@@ -246,25 +208,25 @@ const resetFoodIntakeStats = async (req, res) => {
   const { id } = req.params;
 
   const obj = await Stats.findOne({ owner });
-  const isExist= obj.dates.flatMap((d) => d.stats.foodIntake[type]).find((u) => u._id.toString() === id);
+  const isExist = obj.dates
+    .flatMap((d) => d.stats.foodIntake[type])
+    .find((u) => u._id.toString() === id);
 
- if (!isExist) {
-    res.status(200).json({ message: `Food intake with requested id ${id} not found` });
+  if (!isExist) {
+    res
+      .status(200)
+      .json({ message: `Food intake with requested id ${id} not found` });
     return;
   }
 
-  const firstUpdateQuery = createFirstFoodUpdateQuery(isExist)
-await Stats.findOneAndUpdate(
-    { owner },
-    firstUpdateQuery,
-    {
-      new: true,
-      arrayFilters: [{ [`dateElement._id`]: isExist._id }],
-    }
-  );
- const updateQuery = {
+  const firstUpdateQuery = createFirstFoodUpdateQuery(isExist);
+  await Stats.findOneAndUpdate({ owner }, firstUpdateQuery, {
+    new: true,
+    arrayFilters: [{ [`dateElement._id`]: isExist._id }],
+  });
+  const updateQuery = {
     $pull: {
-       [`dates.$[dateElement].stats.foodIntake.${type}`]: {_id: id},
+      [`dates.$[dateElement].stats.foodIntake.${type}`]: { _id: id },
     },
   };
   const arrayFilters = [
@@ -272,14 +234,14 @@ await Stats.findOneAndUpdate(
       [`dateElement.stats.foodIntake.${type}._id`]: id,
     },
   ];
-await Stats.findOneAndUpdate(
-    {owner},
-    updateQuery,
-    { new: true, arrayFilters }
-  );
+  await Stats.findOneAndUpdate({ owner }, updateQuery, {
+    new: true,
+    arrayFilters,
+  });
 
-  res.status(200).json({ message: `Food intake with id ${id} successfuly deleted` });
-
+  res
+    .status(200)
+    .json({ message: `Food intake with id ${id} successfuly deleted` });
 };
 
 const resetWaterIntakeStats = async (req, res) => {
@@ -327,13 +289,16 @@ const getTotalConsumptionStats = async (req, res) => {
   });
 
   if (!result.length) {
-    res
-      .status(200)
-      .json({ message: "No records found within the given period", stats: null });
+    res.status(200).json({
+      message: "No records found within the given period",
+      stats: null,
+    });
     return;
   }
 
-  const transfomedResult = [...result[0].dates].filter(day => day.date >= dateFrom && day.date <= dateTo);
+  const transfomedResult = [...result[0].dates].filter(
+    (day) => day.date >= dateFrom && day.date <= dateTo
+  );
 
   res.status(200).json({ data: transfomedResult });
 };
