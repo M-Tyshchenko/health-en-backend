@@ -5,16 +5,7 @@ const addWaterIntakeSchema = joi.object({
   waterIntake: joi.number().required().max(7000).positive(),
 });
 
-const addFoodIntakeSchema = joi.object({
-  carbohidrates: joi.number().required(),
-  protein: joi.number().required(),
-  fat: joi.number().required(),
-  dish: joi.string().required(),
-  type: joi.string().valid("breakfast", "lunch", "dinner", "snack"),
-  calories: joi.number().required(),
-});
-
-const updateFoodIntakeSchema = joi.object({
+const foodIntakeSchema = joi.object({
   carbohidrates: joi.number().required(),
   protein: joi.number().required(),
   fat: joi.number().required(),
@@ -29,8 +20,7 @@ const resetFoodIntakeSchema = joi.object({
 
 const schemas = {
   addWaterIntakeSchema,
-  addFoodIntakeSchema,
-  updateFoodIntakeSchema,
+  foodIntakeSchema,
   resetFoodIntakeSchema,
 };
 

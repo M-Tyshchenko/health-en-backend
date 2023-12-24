@@ -29,7 +29,7 @@ router.post("/weight", authenticate, DetailsController.updateWeight);
 router.post(
   "/food-intake",
   authenticate,
-  validateBody(schemas.addFoodIntakeSchema),
+  validateBody(schemas.foodIntakeSchema),
   StatsController.addFoodIntakeStats
 );
 
@@ -37,7 +37,7 @@ router.put(
   "/food-intake/:id",
   isValidId,
   authenticate,
-  validateBody(schemas.updateFoodIntakeSchema),
+  validateBody(schemas.foodIntakeSchema),
   StatsController.updateFoodIntakeInfo
 );
 
