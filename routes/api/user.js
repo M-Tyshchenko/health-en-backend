@@ -3,12 +3,17 @@ const router = express.Router();
 
 const StatsController = require("../../controllers/stats");
 const DetailsController = require("../../controllers/userDetails");
-const { authenticate, validateBody, upload, isValidId } = require("../../middlewares");
+const {
+  authenticate,
+  validateBody,
+  upload,
+  isValidId,
+} = require("../../middlewares");
 const { schemas } = require("../schemas");
 
-router.get("/current", DetailsController.getCurrentUser);
+router.get("/current", authenticate, DetailsController.getCurrentUser);
 
-router.put("/update", DetailsController.updateUser);
+router.put("/update", authenticate, DetailsController.updateUser);
 
 router.post(
   "/avatars",
@@ -17,9 +22,9 @@ router.post(
   DetailsController.updateAvatar
 );
 
-router.put("/goal", DetailsController.updateGoal);
+router.put("/goal", authenticate, DetailsController.updateGoal);
 
-router.post("/weight", DetailsController.updateWeight);
+router.post("/weight", authenticate, DetailsController.updateWeight);
 
 router.post(
   "/food-intake",
@@ -29,13 +34,19 @@ router.post(
 );
 
 router.put(
-  "/food-intake/:id",isValidId,
-  authenticate, 
+  "/food-intake/:id",
+  isValidId,
+  authenticate,
   validateBody(schemas.updateFoodIntakeSchema),
   StatsController.updateFoodIntakeInfo
 );
 
-router.delete("/food-intake/:id", isValidId, authenticate, StatsController.resetFoodIntakeStats);
+router.delete(
+  "/food-intake/:id",
+  isValidId,
+  authenticate,
+  StatsController.resetFoodIntakeStats
+);
 
 router.post(
   "/water-intake",
@@ -46,7 +57,8 @@ router.post(
 
 router.delete(
   "/water-intake",
-  authenticate, validateBody(schemas.resetFoodIntakeSchema),
+  authenticate,
+  validateBody(schemas.resetFoodIntakeSchema),
   StatsController.resetWaterIntakeStats
 );
 
