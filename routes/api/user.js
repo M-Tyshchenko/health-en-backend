@@ -13,13 +13,11 @@ const { schemas } = require("../schemas");
 
 router.get("/current", authenticate, DetailsController.getCurrentUser);
 
-router.put("/update", authenticate, DetailsController.updateUser);
-
-router.post(
-  "/avatars",
+router.put(
+  "/update",
   authenticate,
   upload.single("avatar"),
-  DetailsController.updateAvatar
+  DetailsController.updateUser
 );
 
 router.put("/goal", authenticate, DetailsController.updateGoal);

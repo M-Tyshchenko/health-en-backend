@@ -602,46 +602,6 @@
       }
     },
 
-    "/api/user/avatars": {
-      "post": {
-        "tags": ["User"],
-        "summary": "Updating user's avatar",
-        "parameters": [],
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "Avatar file",
-          "required": true,
-          "content": {}
-        },
-        "responses": {
-          "200": {
-            "description": "User's avatar updated",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "avatarURL": {
-                      "type": "string",
-                      "description": "User's avatar url"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad request (image is undefined)",
-            "content": {}
-          },
-          "401": {
-            "description": "Not authorized",
-            "content": {}
-          }
-        }
-      }
-    },
-
     "/api/recommended-food": {
       "get": {
         "tags": ["Recommended foods"],
@@ -1160,21 +1120,21 @@
             "description": "number of totalCalories for today after recent update",
             "example": 2000
           },
-                  "totalCarbohidrates": {
-          "type": "number",
-          "description": "amount of total carbohidrates consumption value after update",
-          "example": 640
-        },
-        "totalProtein": {
-          "type": "number",
-          "description": "amount of total protein consumption value after update",
-          "example": 640
-        },
-        "totalFat": {
-          "type": "number",
-          "description": "amount of total fat consumption value after update",
-          "example": 640
-        },
+          "totalCarbohidrates": {
+            "type": "number",
+            "description": "amount of total carbohidrates consumption value after update",
+            "example": 640
+          },
+          "totalProtein": {
+            "type": "number",
+            "description": "amount of total protein consumption value after update",
+            "example": 640
+          },
+          "totalFat": {
+            "type": "number",
+            "description": "amount of total fat consumption value after update",
+            "example": 640
+          },
           "foodIntake": {
             "type": "object",
             "properties": {
