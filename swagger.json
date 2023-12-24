@@ -52,7 +52,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
@@ -96,7 +96,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RegistrationResponse"
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
@@ -169,6 +169,10 @@
           "204": {
             "description": "User signed out",
             "content": {}
+          },
+          "401": {
+            "description": "Not authorized",
+            "content": {}
           }
         }
       }
@@ -190,10 +194,14 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetCurrentUserResponse"
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
+          },
+                    "401": {
+            "description": "Not authorized",
+            "content": {}
           }
         }
       }
@@ -221,13 +229,17 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UpdateUserResponse"
+                  "$ref": "#/components/schemas/UserResponse"
                 }
               }
             }
           },
           "400": {
             "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+                    "401": {
+            "description": "Not authorized",
             "content": {}
           }
         }
@@ -264,6 +276,10 @@
           "400": {
             "description": "Bad request (invalid request body)",
             "content": {}
+          },
+                    "401": {
+            "description": "Not authorized",
+            "content": {}
           }
         }
       }
@@ -298,6 +314,10 @@
           },
           "400": {
             "description": "Bad request (invalid request body)",
+            "content": {}
+          },
+                    "401": {
+            "description": "Not authorized",
             "content": {}
           }
         }
@@ -613,6 +633,10 @@
           "400": {
             "description": "Bad request (image is undefined)",
             "content": {}
+          },
+                    "401": {
+            "description": "Not authorized",
+            "content": {}
           }
         }
       }
@@ -707,9 +731,9 @@
         }
       },
 
-      "RegistrationResponse": {
+      "UserResponse": {
         "type": "object",
-        "properties": {         
+        "properties": {
           "user": {
             "type": "object",
             "properties": {
@@ -832,85 +856,6 @@
         }
       },
 
-      "GetCurrentUserResponse": {
-        "type": "object",
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "User's name",
-            "example": "John Johnson"
-          },
-          "email": {
-            "type": "string",
-            "description": "User's email",
-            "format": "email"
-          },
-          "password": {
-            "type": "string",
-            "description": "Hashed password"
-          },
-          "goal": {
-            "type": "string",
-            "enum": ["Lose fat", "Maintain", "Gain muscle"]
-          },
-          "gender": {
-            "type": "string",
-            "enum": ["Male", "Female"]
-          },
-
-          "age": {
-            "type": "number",
-            "example": 35
-          },
-
-          "height": {
-            "type": "number",
-            "example": 170
-          },
-
-          "weight": {
-            "type": "number",
-            "example": 80
-          },
-
-          "activity": {
-            "type": "number",
-            "enum": [1.2, 1.375, 1.55, 1.725, 1.9]
-          },
-          "bmr": {
-            "type": "number",
-            "description": "Basal metabolic rate"
-          },
-          "water": {
-            "type": "number",
-            "description": "Water intaked per day"
-          },
-          "nutrients": {
-            "properties": {
-              "carbohidrates": {
-                "type": "number",
-                "example": 140
-              },
-              "protein": {
-                "type": "number",
-                "example": 30
-              },
-              "fat": {
-                "type": "number",
-                "example": 50
-              }
-            }
-          },
-          "token": {
-            "type": "string"
-          },
-          "avatarUrl": {
-            "type": "string",
-            "description": "User's avatar link"
-          }
-        }
-      },
-
       "UpdateUser": {
         "type": "object",
         "required": ["name", "gender", "age", "height", "weight", "activity"],
@@ -948,28 +893,7 @@
           }
         }
       },
-
-      "UpdateUserResponse": {
-        "type": "object",
-        "properties": {
-          "user": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "updated user's name",
-                "example": "Jake Sully"
-              },
-              "email": {
-                "type": "string",
-                "description": "updated user's email",
-                "example": "jake@mail.com"
-              }
-            }
-          }
-        }
-      },
-
+     
       "UpdateUserGoal": {
         "type": "object",
         "required": ["goal"],
