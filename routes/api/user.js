@@ -11,18 +11,13 @@ const {
 } = require("../../middlewares");
 const { schemas } = require("../schemas");
 
-router.get("/current", authenticate, DetailsController.getCurrentUser);
+router.get("/current", DetailsController.getCurrentUser);
 
-router.put(
-  "/update",
-  authenticate,
-  upload.single("avatar"),
-  DetailsController.updateUser
-);
+router.put("/update", upload.single("avatar"), DetailsController.updateUser);
 
-router.put("/goal", authenticate, DetailsController.updateGoal);
+router.put("/goal", DetailsController.updateGoal);
 
-router.post("/weight", authenticate, DetailsController.updateWeight);
+router.post("/weight", DetailsController.updateWeight);
 
 router.post(
   "/food-intake",

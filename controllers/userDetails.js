@@ -32,40 +32,10 @@ const addWeightStats = async (req, weight) => {
 };
 
 async function getCurrentUser(req, res) {
-  const {
-    _id,
-    name,
-    email,
-    goal,
-    gender,
-    age,
-    height,
-    weight,
-    activity,
-    avatarURL,
-    bmr,
-    water,
-    nutrients,
-    token,
-  } = req.user;
+  const user = req.user;
 
-  res.status(200).json({
-    user: {
-      _id,
-      name,
-      email,
-      goal,
-      gender,
-      age,
-      height,
-      weight,
-      activity,
-      avatarURL,
-      bmr,
-      water,
-      nutrients,
-      token,
-    },
+  res.status(200).send({
+    user,
   });
 }
 

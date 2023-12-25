@@ -7,8 +7,9 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
 
 const authRouter = require("./routes/api/auth");
-const statsRouter = require("./routes/api/user")
+const statsRouter = require("./routes/api/user");
 const foodRouter = require("./routes/api/recommendedFood");
+const { authenticate } = require("./middlewares");
 
 const app = express();
 
@@ -21,7 +22,7 @@ app.use(express.json());
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api/auth", authRouter);
-app.use("/api/user", statsRouter);
+app.use("/api/user", authenticate, statsRouter);
 app.use("/api/recommended-food", foodRouter);
 
 app.use((req, res) => {
