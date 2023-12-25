@@ -14,6 +14,7 @@
 | Express             |
 | Mongoose            |
 | Multer              |
+| Dotenv              |
 | Swagger-ui-express  |
 
 ## Backend team:
