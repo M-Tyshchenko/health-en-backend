@@ -18,7 +18,7 @@
 
 ## Backend team:
 
-- [[**Mariia Tyshchenko**](https://github.com/M-Tyshchenko)] - team lead, code reviewer, performed the authorization and authentication part
+- [**Mariia Tyshchenko**](https://github.com/M-Tyshchenko) - team lead, code reviewer, performed the authorization and authentication part
 
 - [[**Anton Maliutin**](https://github.com/Enab13d)] - performed the statistics part (water and food consumption), helpers and middlewares
 
