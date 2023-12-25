@@ -11,7 +11,7 @@ const {
 } = require("../../middlewares");
 const { schemas } = require("../schemas");
 
-router.get("/current", DetailsController.getCurrentUser);
+router.get("/current", authenticate, DetailsController.getCurrentUser);
 
 router.put("/update", upload.single("avatar"), DetailsController.updateUser);
 
