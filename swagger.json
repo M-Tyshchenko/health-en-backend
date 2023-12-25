@@ -829,7 +829,7 @@
 
           "gender": {
             "type": "string",
-            "enum": ["Male", "Female"]
+            "enum": ["male", "female"]
           },
 
           "age": {
@@ -850,6 +850,10 @@
           "activity": {
             "type": "number",
             "enum": [1.2, 1.375, 1.55, 1.725, 1.9]
+          },
+          "avatarURL": {
+            "type": "string",
+            "description": "User's avatar link"
           }
         }
       },
