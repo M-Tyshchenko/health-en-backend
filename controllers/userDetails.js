@@ -5,7 +5,7 @@ const { updateSchema } = require("../routes/schemas/user");
 const {
   generateDailyConsumptionEntry,
   createNewStatsEntry,
-  createFormattedDateString,
+  createFormattedDateString, generateMealEntry
 } = require("../helpers");
 const { Stats } = require("../models");
 
@@ -17,7 +17,7 @@ const addWeightStats = async (req, weight) => {
   const isOwnerPresent = await Stats.findOne({ owner });
 
   if (!isOwnerPresent) {
-    const dailyEntry = generateDailyConsumptionEntry({
+    const dailyEntry = generateDailyConsumptionEntry(generateMealEntry, {
       weight,
       date,
     });
@@ -27,7 +27,7 @@ const addWeightStats = async (req, weight) => {
     return;
   }
 
-  const dailyEntry = generateDailyConsumptionEntry({ weight, date });
+  const dailyEntry = generateDailyConsumptionEntry(generateMealEntry, { weight, date });
   await Stats.findOneAndUpdate({ owner }, { dates: dailyEntry }, { new: true });
 };
 
