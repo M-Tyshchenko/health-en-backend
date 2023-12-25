@@ -18,10 +18,11 @@
 
 ## Backend team:
 
-- [[GitHub](https://github.com/M-Tyshchenko)](**Mariia Tyshchenko**) - team lead, code reviewer, performed the authorization and authentication part
+- [[GitHub](https://github.com/M-Tyshchenko)] **Mariia Tyshchenko** - team lead, code reviewer, performed the authorization and authentication part
 
-(https://github.com/Enab13d) Anton Maliutin - performed the statistics part (water and food consumption), helpers and middlewares
-(https://github.com/AndrewDyomin) Andrew Dyomin - perfomed user's part (current information, updating information)
+- [[GitHub](https://github.com/Enab13d)] **Anton Maliutin** - performed the statistics part (water and food consumption), helpers and middlewares
+
+- [[GitHub](https://github.com/AndrewDyomin)] **Andrew Dyomin** - perfomed user's part (current information, updating information)
 
 ## Project deployed on:
 
