@@ -21,6 +21,7 @@ const {
   createFoodIntakeQuery,
   createFoodIntakeSecondUpdateQuery,
   createFoodIntakeQueryIfNotPresent,
+  createDeleteFoodArrayQuery
 } = require("../helpers/queryGenetator");
 module.exports = {
   handleMongooseError,
@@ -39,4 +40,5 @@ module.exports = {
   createFoodIntakeQuery,
   createFoodIntakeSecondUpdateQuery,
   createFoodIntakeQueryIfNotPresent,
+  createDeleteFoodArrayQuery
 };
