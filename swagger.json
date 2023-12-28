@@ -443,18 +443,18 @@
       "delete": {
         "tags": ["Food-intake"],
         "summary": "Completely clear food intake of specified type for current date",
-        "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "reset food-intake object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetFoodIntakeRequest"
-              }
+        "parameters": [
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "description": "type of food intake",
+            "schema": {
+              "type": "string",
+              "example": "lunch"
             }
-          }
-        },
+          }],
+        "security": [{ "Bearer": [] }],
         "responses": {
           "200": {
             "description": "Successful operation",
