@@ -38,6 +38,12 @@ router.delete(
   "/food-intake/:id",
   isValidId,
   authenticate,
+  StatsController.deleteFoodIntakeById
+);
+router.delete(
+  "/food-intake",
+  authenticate,
+  validateBody(schemas.resetFoodIntakeSchema),
   StatsController.resetFoodIntakeStats
 );
 

@@ -18,6 +18,25 @@ const createFirstFoodUpdateQuery = (modelObj) => {
     },
   };
 };
+const createDeleteFoodArrayQuery = (totalValues, type) => {
+   const {
+    calories: prevCaloriesValue,
+    carbohidrates: prevCarbohidratesValue,
+    protein: prevProteinValue,
+    fat: prevFatValue,
+  } = totalValues;
+  return {
+    $inc: {
+      [`dates.$.stats.totalCalories`]: -prevCaloriesValue,
+      [`dates.$.stats.totalCarbohidrates`]:
+        -prevCarbohidratesValue,
+      [`dates.$.stats.totalProtein`]: -prevProteinValue,
+      [`dates.$.stats.totalFat`]: -prevFatValue,
+    },
+    [`dates.$.stats.foodIntake.${type}`]: []
+  }
+}
+
 // creates query finding desired mealIntake
 const createFoodIntakeQuery = ({
   type,
@@ -85,4 +104,5 @@ module.exports = {
   createFoodIntakeQuery,
   createFoodIntakeSecondUpdateQuery,
   createFoodIntakeQueryIfNotPresent,
+  createDeleteFoodArrayQuery
 };

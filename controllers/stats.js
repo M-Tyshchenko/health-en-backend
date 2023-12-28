@@ -11,6 +11,7 @@ const {
   createFirstFoodUpdateQuery,
   createFoodIntakeSecondUpdateQuery,
   createFoodIntakeQueryIfNotPresent,
+  createDeleteFoodArrayQuery
 } = require("../helpers");
 const { Stats } = require("../models");
 
@@ -200,7 +201,7 @@ const updateFoodIntakeInfo = async (req, res) => {
     .json(compileFoodIntakeSuccesResponse(result, "update", transfomedResult));
 };
 
-const resetFoodIntakeStats = async (req, res) => {
+const deleteFoodIntakeById = async (req, res) => {
   const { _id: owner } = req.user;
   const { type } = req.body;
   const { id } = req.params;
@@ -241,6 +242,45 @@ const resetFoodIntakeStats = async (req, res) => {
     .status(200)
     .json({ message: `Food intake with id ${id} successfuly deleted` });
 };
+
+const resetFoodIntakeStats = async (req, res) => {
+
+  const { _id: owner } = req.user;
+  const { type } = req.body;
+  const date = createFormattedDateString();
+  const result = await Stats.findOne({ owner, "dates.date": date });
+
+  if (!result) {
+    throw HTTPError(404)
+  }
+  const data = result.dates.filter(d => d.date === date);
+  if (data.length < 1) {
+    res.status(200).json({message: `No records in ${type} per today`})
+  }
+  const [{ stats }] = data;
+
+  const totalValues = stats.foodIntake[type].reduce((acc, el) => { 
+    acc.carbohidrates += el.carbohidrates;
+    acc.protein += el.protein;
+    acc.fat += el.fat;
+    acc.calories += el.calories;
+    return acc;
+
+  }, {
+      carbohidrates: 0,
+      protein: 0,
+      fat: 0,
+      calories: 0
+    });
+
+  const query = createDeleteFoodArrayQuery(totalValues, type)
+
+  const finalResult = await Stats.findOneAndUpdate({owner, "dates.date": date}, query, {new: true})
+  const transformedFinalResult = finalResult.dates.filter(d => d.date === date);
+
+  res.status(200).json({message: `${type} records per today cleared`, data: transformedFinalResult[0]})
+
+}
 
 const resetWaterIntakeStats = async (req, res) => {
   const { _id: owner } = req.user;
@@ -297,8 +337,9 @@ const getTotalConsumptionStats = async (req, res) => {
   const transfomedResult = [...result[0].dates].filter(
     (day) => day.date >= dateFrom && day.date <= dateTo
   );
+  const data = transfomedResult.length > 1 ? transfomedResult : transfomedResult[0];
 
-  res.status(200).json({ data: transfomedResult });
+  res.status(200).json(data);
 };
 
 module.exports = {
@@ -307,5 +348,6 @@ module.exports = {
   getTotalConsumptionStats: ctrlWrapper(getTotalConsumptionStats),
   addFoodIntakeStats: ctrlWrapper(addFoodIntakeStats),
   updateFoodIntakeInfo: ctrlWrapper(updateFoodIntakeInfo),
-  resetFoodIntakeStats: ctrlWrapper(resetFoodIntakeStats),
+  deleteFoodIntakeById: ctrlWrapper(deleteFoodIntakeById),
+  resetFoodIntakeStats: ctrlWrapper(resetFoodIntakeStats)
 };
