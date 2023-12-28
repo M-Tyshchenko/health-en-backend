@@ -203,7 +203,7 @@ const updateFoodIntakeInfo = async (req, res) => {
 
 const deleteFoodIntakeById = async (req, res) => {
   const { _id: owner } = req.user;
-  const { type } = req.body;
+  const { type } =  req.query;
   const { id } = req.params;
 
   const obj = await Stats.findOne({ owner });
