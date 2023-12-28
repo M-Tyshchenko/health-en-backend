@@ -246,7 +246,7 @@ const deleteFoodIntakeById = async (req, res) => {
 const resetFoodIntakeStats = async (req, res) => {
 
   const { _id: owner } = req.user;
-  const { type } = req.body;
+  const { type } = req.query;
   const date = createFormattedDateString();
   const result = await Stats.findOne({ owner, "dates.date": date });
 
