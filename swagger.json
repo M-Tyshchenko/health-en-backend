@@ -547,20 +547,19 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": true,
+            "description": "type of food intake",
+            "schema": {
+              "type": "string",
+              "example": "lunch"
+            }
           }
         ],
         "security": [{ "Bearer": [] }],
-        "requestBody": {
-          "description": "reset food-intake object",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResetFoodIntakeRequest"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful operation",
@@ -1214,17 +1213,6 @@
                 "description": "food intake obect id"
               }
             }
-          }
-        }
-      },
-      "ResetFoodIntakeRequest": {
-        "type": "object",
-        "required": ["type"],
-        "properties": {
-          "type": {
-            "type": "string",
-            "description": "food intake type",
-            "example": "dinner"
           }
         }
       },
