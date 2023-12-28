@@ -254,11 +254,12 @@ const resetFoodIntakeStats = async (req, res) => {
     throw HTTPError(404)
   }
   const data = result.dates.filter(d => d.date === date);
-  if (data.length < 1) {
-    res.status(200).json({message: `No records in ${type} per today`})
+
+  if (!data[0].stats.foodIntake[type].length) {
+    res.status(200).json({ message: `No records in ${type} per today` })
+    return;
   }
   const [{ stats }] = data;
-
   const totalValues = stats.foodIntake[type].reduce((acc, el) => { 
     acc.carbohidrates += el.carbohidrates;
     acc.protein += el.protein;
