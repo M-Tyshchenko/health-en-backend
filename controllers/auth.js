@@ -160,10 +160,6 @@ async function forgotPsw(req, res) {
     throw HTTPError(404, "User not found");
   }
 
-  if (user.token !== "") {
-    throw HTTPError(400, "User has already logged in");
-  }
-
   await User.findByIdAndUpdate(user._id, { password: hashPassword });
 
   const forgotPswEmail = ElasticEmail.EmailMessageData.constructFromObject({
