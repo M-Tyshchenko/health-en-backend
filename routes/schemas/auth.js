@@ -1,7 +1,9 @@
 const Joi = require("joi");
 const { goals, genders, activityIndexes } = require("../../helpers/constants");
 
-const emailDomain = { minDomainSegments: 2, tlds: { allow: ["com", "net"] } };
+const emailDomain = {
+  minDomainSegments: 2,
+};
 
 const authSchema = Joi.object({
   name: Joi.string().required(),
