@@ -11,7 +11,7 @@ const {
   createFirstFoodUpdateQuery,
   createFoodIntakeSecondUpdateQuery,
   createFoodIntakeQueryIfNotPresent,
-  createDeleteFoodArrayQuery
+  createDeleteFoodArrayQuery,
 } = require("../helpers");
 const { Stats } = require("../models");
 
@@ -203,85 +203,96 @@ const updateFoodIntakeInfo = async (req, res) => {
 
 const deleteFoodIntakeById = async (req, res) => {
   const { _id: owner } = req.user;
-  const { type } =  req.query;
+  const { type } = req.query;
   const { id } = req.params;
 
-  const obj = await Stats.findOne({ owner });
-  const isExist = obj.dates
-    .flatMap((d) => d.stats.foodIntake[type])
-    .find((u) => u._id.toString() === id);
+  const date = createFormattedDateString();
 
-  if (!isExist) {
-    res
-      .status(200)
-      .json({ message: `Food intake with requested id ${id} not found` });
+  const result = await Stats.findOne({ owner, "dates.date": date });
+  if (!result) {
+    throw HTTPError(404);
+  }
+  const data = result.dates.filter((d) => d.date === date);
+  if (!data[0].stats.foodIntake[type].length) {
+    res.status(200).json({ message: `No records in ${type} per today` });
     return;
   }
+  const [{ stats }] = data;
 
-  const firstUpdateQuery = createFirstFoodUpdateQuery(isExist);
-  await Stats.findOneAndUpdate({ owner }, firstUpdateQuery, {
-    new: true,
-    arrayFilters: [{ [`dateElement._id`]: isExist._id }],
-  });
-  const updateQuery = {
-    $pull: {
-      [`dates.$[dateElement].stats.foodIntake.${type}`]: { _id: id },
+  const totalValues = stats.foodIntake[type].reduce(
+    (acc, el) => {
+      acc.carbohidrates += el.carbohidrates;
+      acc.protein += el.protein;
+      acc.fat += el.fat;
+      acc.calories += el.calories;
+      return acc;
     },
-  };
-  const arrayFilters = [
     {
-      [`dateElement.stats.foodIntake.${type}._id`]: id,
-    },
-  ];
-  await Stats.findOneAndUpdate({ owner }, updateQuery, {
+      carbohidrates: 0,
+      protein: 0,
+      fat: 0,
+      calories: 0,
+    }
+  );
+  const query = createDeleteFoodArrayQuery(totalValues, type);
+
+  await Stats.findOneAndUpdate({ owner, "dates.date": date }, query, {
     new: true,
-    arrayFilters,
   });
 
-  res
-    .status(200)
-    .json({ message: `Food intake with id ${id} successfuly deleted` });
+  res.status(200).json({
+    message: `Food intake with id ${id} successfuly deleted`,
+  });
 };
 
 const resetFoodIntakeStats = async (req, res) => {
-
   const { _id: owner } = req.user;
   const { type } = req.query;
   const date = createFormattedDateString();
   const result = await Stats.findOne({ owner, "dates.date": date });
 
   if (!result) {
-    throw HTTPError(404)
+    throw HTTPError(404);
   }
-  const data = result.dates.filter(d => d.date === date);
+  const data = result.dates.filter((d) => d.date === date);
 
   if (!data[0].stats.foodIntake[type].length) {
-    res.status(200).json({ message: `No records in ${type} per today` })
+    res.status(200).json({ message: `No records in ${type} per today` });
     return;
   }
   const [{ stats }] = data;
-  const totalValues = stats.foodIntake[type].reduce((acc, el) => { 
-    acc.carbohidrates += el.carbohidrates;
-    acc.protein += el.protein;
-    acc.fat += el.fat;
-    acc.calories += el.calories;
-    return acc;
-
-  }, {
+  const totalValues = stats.foodIntake[type].reduce(
+    (acc, el) => {
+      acc.carbohidrates += el.carbohidrates;
+      acc.protein += el.protein;
+      acc.fat += el.fat;
+      acc.calories += el.calories;
+      return acc;
+    },
+    {
       carbohidrates: 0,
       protein: 0,
       fat: 0,
-      calories: 0
-    });
+      calories: 0,
+    }
+  );
 
-  const query = createDeleteFoodArrayQuery(totalValues, type)
+  const query = createDeleteFoodArrayQuery(totalValues, type);
 
-  const finalResult = await Stats.findOneAndUpdate({owner, "dates.date": date}, query, {new: true})
-  const transformedFinalResult = finalResult.dates.filter(d => d.date === date);
+  const finalResult = await Stats.findOneAndUpdate(
+    { owner, "dates.date": date },
+    query,
+    { new: true }
+  );
+  const transformedFinalResult = finalResult.dates.filter(
+    (d) => d.date === date
+  );
 
-  res.status(200).json({message: `${type} records per today cleared`, data: transformedFinalResult[0]})
-
-}
+  res.status(200).json({
+    message: `${type} records per today cleared`,
+    data: transformedFinalResult[0],
+  });
+};
 
 const resetWaterIntakeStats = async (req, res) => {
   const { _id: owner } = req.user;
@@ -338,7 +349,8 @@ const getTotalConsumptionStats = async (req, res) => {
   const transfomedResult = [...result[0].dates].filter(
     (day) => day.date >= dateFrom && day.date <= dateTo
   );
-  const data = transfomedResult.length > 1 ? transfomedResult : transfomedResult[0];
+  const data =
+    transfomedResult.length > 1 ? transfomedResult : transfomedResult[0];
 
   res.status(200).json(data);
 };
@@ -350,5 +362,5 @@ module.exports = {
   addFoodIntakeStats: ctrlWrapper(addFoodIntakeStats),
   updateFoodIntakeInfo: ctrlWrapper(updateFoodIntakeInfo),
   deleteFoodIntakeById: ctrlWrapper(deleteFoodIntakeById),
-  resetFoodIntakeStats: ctrlWrapper(resetFoodIntakeStats)
+  resetFoodIntakeStats: ctrlWrapper(resetFoodIntakeStats),
 };
